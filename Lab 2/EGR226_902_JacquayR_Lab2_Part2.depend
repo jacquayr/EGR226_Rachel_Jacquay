@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1612366672 source:w:\egr 226\egr226_902_jacquayr_lab2_part2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<ctype.h>
+	<string.h>
+
