@@ -63,17 +63,22 @@ int main(void) {
                         i = 0;                          // set i equal to 0
                     }
                 }
-
-                /*else if (i == 3) {
-                    i = 0;
-                } */
             }
         }
     }
 
-
-void DebounceSwitch1(const int delay) {
-    int i;
-    for(i = 0; i < delay; i++)      //cycles through the __delay_cycles function for delay amount
-        __delay_cycles(1);          //delays input
+/*--------------------------------------------------------------
+ * Function:        DebounceSwitch1
+ * Description:     Add a delay to make sure the button is
+ *                  being pressed and not just bouncing.
+ *
+ * Inputs:          (const int) delay: integer to set the
+ *                  length of the timer delay
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void DebounceSwitch1(const int delay) {     // debounce function definition
+    int i;                                  // index variable
+    for(i = 0; i < delay; i++)              //cycles through the __delay_cycles function for delay amount
+        __delay_cycles(1);                  //delays input
 }
