@@ -1,0 +1,103 @@
+#include "msp432.h"
+
+void DebounceSwitch1(const int delay);  // debounce function
+
+int main(void) {
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
+
+    // white button
+    P3->SEL1 &= ~BIT7;      // configure P3.7 as I/O
+    P3->SEL0 &= ~BIT7;
+    P3->DIR &= ~BIT7;       // set as input
+    P3->REN |= BIT7;        // pull resistor enabled
+    P3->OUT |= BIT7;        // pull up is selected
+
+    // red LED
+    P2->SEL1 &= ~BIT7;      // configure P2.7 as I/O
+    P2->SEL0 &= ~BIT7;
+    P2->DIR |= BIT7;
+    P2->OUT &= ~BIT7;       // set as output pin
+
+    // yellow LED
+    P2->SEL1 &= ~BIT6;      // configure P2.6 as I/O
+    P2->SEL0 &= ~BIT6;
+    P2->DIR |= BIT6;
+    P2->OUT &= ~BIT6;       // set as output pin
+
+    // green LED
+    P2->SEL1 &= ~BIT4;      // configure P2.4 as I/O
+    P2->SEL0 &= ~BIT4;
+    P2->DIR |= BIT4;
+    P2->OUT &= ~BIT4;       // set as output pin
+
+    int i = 0;
+
+    while (1) {                                         // always
+        while ((P3->IN & BIT7) != BIT7) {               // while the button is pressed
+
+                if (i == 0) {                           // if i equals 0
+                    P2->OUT |= BIT7;                    // turn red LED on
+                    P2->OUT &= ~BIT6;                   // turn other LEDs off
+                    P2->OUT &= ~BIT4;
+                    DebounceSwitch1(200000);            // call debounce function
+
+                    if ((P3->IN & BIT7) != BIT7) {      // if button is still pressed
+                        i = 1;                          // increment i
+                    }
+                }
+
+                else if (i == 1) {                      // if i equals 1
+                    P2->OUT |= BIT6;                    // turn green LED on
+                    P2->OUT &= ~BIT7;                   // turn other LEDs off
+                    P2->OUT &= ~BIT4;
+                    DebounceSwitch1(200000);            // call debounce function
+
+                    if ((P3->IN & BIT7) != BIT7) {      // if button is still pressed
+                        i = 2;                          // increment i
+                    }
+                }
+
+                else if (i == 2) {                      // if i equals 2
+                    P2->OUT |= BIT4;                    // turn blue LED on
+                    P2->OUT &= ~BIT6;                   // turn other LEDs off
+                    P2->OUT &= ~BIT7;
+                    DebounceSwitch1(200000);            // call debounce function
+
+                    if ((P3->IN & BIT7) != BIT7) {      // if button is still pressed
+                        i = 0;                          // set i equal to 0
+                    }
+                }
+            }
+        }
+    }
+
+/*--------------------------------------------------------------
+ * Function:        SysTick_Init
+ * Description:     Initialize the SysTick delay component.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void SysTick_Init(void) {
+    SysTick->CTRL = 0;
+    SysTick->LOAD = 0x00FFFFFF;
+    SysTick->VAL = 0;
+    SysTick->CTRL = 0x00000005;
+}
+
+/*--------------------------------------------------------------
+ * Function:        SysTick_Delay
+ * Description:     Add a delay to make sure the button is
+ *                  being pressed and not just bouncing.
+ *
+ * Inputs:          (const int) delay: integer to set the
+ *                  length of the timer delay
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void SysTick_Delay(uint16_t delay) {
+    SysTick->LOAD = ((delay * 3000) - 1);
+    SysTick->VAL = 0;
+    while ((SysTick->CTRL & 0x00010000) == 0);
+}

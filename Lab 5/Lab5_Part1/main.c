@@ -1,9 +1,11 @@
 #include "msp432.h"
 
-void DebounceSwitch1(const int delay);  // debounce function
+void SysTick_Init(void);                // function to initialize SysTick
+void SysTick_Delay(uint16_t delay);     // function to use SysTick
 
 int main(void) {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
+    SysTick_Init();                                 // SysTick intialization function call
 
     // white button
     P3->SEL1 &= ~BIT7;      // configure P3.7 as I/O
@@ -34,7 +36,7 @@ int main(void) {
 
     while (1) {
         if ((P3->IN & BIT7) != BIT7) {          // if switch is pressed
-            DebounceSwitch1(500);               // debounce function call
+            SysTick_Delay(1);                   // SysTick delay function call
 
             if ((P3->IN & BIT7) == BIT7) {      // if switch is pressed still
                 i++;                            // increment i by 1
@@ -72,17 +74,32 @@ int main(void) {
         }
 
 /*--------------------------------------------------------------
- * Function:        DebounceSwitch1
+ * Function:        SysTick_Init
+ * Description:     Initialize the SysTick delay component.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void SysTick_Init(void) {
+    SysTick->CTRL = 0;              // disable SysTick during step
+    SysTick->LOAD = 0x00FFFFFF;     // max reload value
+    SysTick->VAL = 0;               // any write to current value clears it
+    SysTick->CTRL = 0x00000005;     // enable SysTick (3 MHz) -> no interrupts
+}
+
+/*--------------------------------------------------------------
+ * Function:        SysTick_Delay
  * Description:     Add a delay to make sure the button is
  *                  being pressed and not just bouncing.
  *
- * Inputs:          (const int) delay: integer to set the
+ * Inputs:          (unsigned 16-bit int) delay: integer to set the
  *                  length of the timer delay
  *
  * Outputs:         none
  *-------------------------------------------------------------*/
-void DebounceSwitch1(const int delay) {     // debounce function
-    int i;                                  // index variable
-    for(i = 0; i < delay; i++)              // cycles through the __delay_cycles function for delay amount
-        __delay_cycles(1);                  // delays input
+void SysTick_Delay(uint16_t delay) {
+    SysTick->LOAD = ((delay * 3000) - 1);           // delay for 1 millisecond per delay value
+    SysTick->VAL = 0;                               // any write to current value clears it
+    while ((SysTick->CTRL & 0x00010000) == 0);      // wait for flag to be set
 }

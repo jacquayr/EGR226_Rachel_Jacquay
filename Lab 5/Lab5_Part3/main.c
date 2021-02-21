@@ -1,9 +1,11 @@
 #include "msp432.h"
 
-void DebounceSwitch1(const int delay);  // debounce function
+void SysTick_Init(void);                // function to initialize SysTick
+void SysTick_Delay(uint16_t delay);     // function to use SysTick
 
 int main(void) {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
+    SysTick_Init();                                 // SysTick intialization function call
 
     // white button
     P3->SEL1 &= ~BIT7;      // configure P3.7 as I/O
@@ -46,7 +48,7 @@ int main(void) {
                     P2->OUT |= BIT7;                        // turn red LED on
                     P2->OUT &= ~BIT6;                       // turn other LEDs off
                     P2->OUT &= ~BIT4;
-                    DebounceSwitch1(200000);                // call debounce function
+                    SysTick_Delay(1000);                    // call Systick delay function
 
                     if ((P3->IN & BIT7) != BIT7) {          // if white button is still pressed
                         i = 1;                              // i is now 1
@@ -61,7 +63,7 @@ int main(void) {
                     P2->OUT |= BIT6;                        // turn green LED on
                     P2->OUT &= ~BIT7;                       // turn other LEDs off
                     P2->OUT &= ~BIT4;
-                    DebounceSwitch1(200000);                // call debounce function
+                    SysTick_Delay(1000);                    // call Systick delay function
 
                     if ((P3->IN & BIT7) != BIT7) {          // if white button is still pressed
                         i = 2;                              // i is now 2
@@ -76,7 +78,7 @@ int main(void) {
                     P2->OUT |= BIT4;                        // turn blue LED on
                     P2->OUT &= ~BIT6;                       // turn other LEDs off
                     P2->OUT &= ~BIT7;
-                    DebounceSwitch1(200000);                // call debounce function
+                    SysTick_Delay(1000);                    // call Systick delay function
 
                     if ((P3->IN & BIT7) != BIT7) {          // if white button is still pressed
                         i = 0;                              // i is now 0
@@ -91,17 +93,32 @@ int main(void) {
     }
 
 /*--------------------------------------------------------------
- * Function:        DebounceSwitch1
+ * Function:        SysTick_Init
+ * Description:     Initialize the SysTick delay component.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void SysTick_Init(void) {
+    SysTick->CTRL = 0;              // disable SysTick during step
+    SysTick->LOAD = 0x00FFFFFF;     // max reload value
+    SysTick->VAL = 0;               // any write to current value clears it
+    SysTick->CTRL = 0x00000005;     // enable SysTick (3 MHz) -> no interrupts
+}
+
+/*--------------------------------------------------------------
+ * Function:        SysTick_Delay
  * Description:     Add a delay to make sure the button is
  *                  being pressed and not just bouncing.
  *
- * Inputs:          (const int) delay: integer to set the
+ * Inputs:          (unsigned 16-bit int) delay: integer to set the
  *                  length of the timer delay
  *
  * Outputs:         none
  *-------------------------------------------------------------*/
-void DebounceSwitch1(const int delay) {     // debounce function definition
-    int i;                                  // index variable
-    for(i = 0; i < delay; i++)              // cycles through the __delay_cycles function for delay amount
-        __delay_cycles(1);                  // delays input
+void SysTick_Delay(uint16_t delay) {
+    SysTick->LOAD = ((delay * 3000) - 1);           // delay for 1 millisecond per delay value
+    SysTick->VAL = 0;                               // any write to current value clears it
+    while ((SysTick->CTRL & 0x00010000) == 0);      // wait for flag to be set
 }
