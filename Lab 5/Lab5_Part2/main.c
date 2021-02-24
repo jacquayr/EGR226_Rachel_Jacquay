@@ -38,9 +38,9 @@ int main(void) {
         while ((P3->IN & BIT7) != BIT7) {               // while the button is pressed
 
                 if (i == 0) {                           // if i equals 0
-                    P2->OUT |= BIT7;                    // turn red LED on
+                    P2->OUT |= BIT4;                    // turn green LED on
                     P2->OUT &= ~BIT6;                   // turn other LEDs off
-                    P2->OUT &= ~BIT4;
+                    P2->OUT &= ~BIT7;
                     SysTick_Delay(1000);                // SysTick delay function call
 
                     if ((P3->IN & BIT7) != BIT7) {      // if button is still pressed
@@ -49,7 +49,7 @@ int main(void) {
                 }
 
                 else if (i == 1) {                      // if i equals 1
-                    P2->OUT |= BIT6;                    // turn green LED on
+                    P2->OUT |= BIT6;                    // turn yellow LED on
                     P2->OUT &= ~BIT7;                   // turn other LEDs off
                     P2->OUT &= ~BIT4;
                     SysTick_Delay(1000);                // SysTick delay function call
@@ -60,9 +60,9 @@ int main(void) {
                 }
 
                 else if (i == 2) {                      // if i equals 2
-                    P2->OUT |= BIT4;                    // turn blue LED on
+                    P2->OUT |= BIT7;                    // turn red LED on
                     P2->OUT &= ~BIT6;                   // turn other LEDs off
-                    P2->OUT &= ~BIT7;
+                    P2->OUT &= ~BIT4;
                     SysTick_Delay(1000);                // SysTick delay function call
 
                     if ((P3->IN & BIT7) != BIT7) {      // if button is still pressed

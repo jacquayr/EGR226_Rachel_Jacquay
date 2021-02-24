@@ -48,10 +48,10 @@ int main(void) {
                     P2->OUT &= ~BIT4;
                 }
 
-                else if (i == 1) {              // if i equals 1 (red LED case)
-                    P2->OUT |= BIT7;            // turn red LED on
+                else if (i == 1) {              // if i equals 1 (green LED case)
+                    P2->OUT |= BIT4;            // turn green LED on
                     P2->OUT &= ~BIT6;           // turn other LEDs off
-                    P2->OUT &= ~BIT4;
+                    P2->OUT &= ~BIT7;
                 }
 
                 else if (i == 2) {              // if i equals 2 (yellow LED case)
@@ -60,10 +60,10 @@ int main(void) {
                     P2->OUT &= ~BIT4;
                 }
 
-                else if (i == 3) {              // if i equals 3 (green LED case)
-                    P2->OUT |= BIT4;            // turn green LED on
+                else if (i == 3) {              // if i equals 3 (red LED case)
+                    P2->OUT |= BIT7;            // turn red LED on
                     P2->OUT &= ~BIT6;           // turn other LEDs off
-                    P2->OUT &= ~BIT7;
+                    P2->OUT &= ~BIT4;
                 }
 
                 else {                          // anything other than 0 through 3
