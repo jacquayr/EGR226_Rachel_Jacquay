@@ -1,0 +1,29 @@
+#include "msp.h"
+#include <stdio.h>
+
+void Keypad_Init(void);
+uint8_t Read_Keypad(void);
+void Print_Keys(void);
+
+uint8_t num, pressed;
+
+void main(void) {
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;
+    Keypad_Init();
+
+    while(1) {
+        pressed = Read_Keypad();
+        if (pressed) {
+            Print_Keys();
+            __delay_cycles(30000);
+        }
+    }
+}
+
+void Keypad_Init(void) {
+
+}
+
+void Print_Keys(void) {
+
+}

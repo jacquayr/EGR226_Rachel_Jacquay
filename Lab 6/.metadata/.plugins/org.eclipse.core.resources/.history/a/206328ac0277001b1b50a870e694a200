@@ -1,0 +1,151 @@
+#include "msp.h"
+#include <stdio.h>
+
+void Keypad_Init(void);
+uint8_t Read_Keypad(void);
+void Print_Keys(uint8_t value);
+void SysTick_Init(void);
+void SysTick_Delay(uint16_t delay);
+
+uint8_t num, pressed;
+
+
+void main(void) {
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;
+    Keypad_Init();
+    SysTick_Init();
+
+    while(1) {
+        pressed = Read_Keypad();
+        if (pressed) {
+            Print_Keys(num);
+            __delay_cycles(30000);
+        }
+    }
+}
+
+
+
+/*--------------------------------------------------------------
+ * Function:        Read_Keypad
+ * Description:     Read the keys that are being pressed on the
+ *                  keypad.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         (unsigned 8-bit int): integer returned
+ *                  to main.c that tells the program if the keys
+ *                  are being pressed
+ *-------------------------------------------------------------*/
+uint8_t Read_Keypad(void) {
+    uint8_t col, row;
+
+    for (col = 0; col < 3; col++) {
+        P4->DIR = 0x00;
+        P4->DIR |= BIT(4 + col);
+        P4->OUT &= ~BIT(4 + col);
+
+        SysTick_Delay(10);
+        row = P4->IN & 0x0F;
+
+        while ( !(P4IN & BIT0) | !(P4IN & BIT1) |!(P4IN & BIT2) |!(P4IN & BIT3) );
+
+        if (row != 0x0F)
+            break;
+    }
+
+    P2->DIR = 0x00;
+
+    if (col == 3)
+        return 0;
+
+    if (row == 0x0E)
+        num = col + 1;
+    if (row == 0x0D)
+        num = 3 + col + 1;
+    if (row == 0x0B)
+        num = 6 + col + 1;
+    if (row == 0x07)
+        num = 9 + col + 1;
+
+    return 1;
+}
+
+
+/*--------------------------------------------------------------
+ * Function:        Print_Keys
+ * Description:     Print the keys that were pressed from the
+ *                  keypad.
+ *
+ * Inputs:          (unsigned 8-bit int) value: the number that
+ *                  was pressed on the keypad
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void Print_Keys(uint8_t value) {
+    if (value >= 1 || value <= 9) {
+        printf("Key pressed: %d\n", value);
+    }
+
+    if (value == 10) {
+        printf("Key pressed: *\n");
+    }
+
+    if (value == 11) {
+        printf("Key pressed: 0\n");
+    }
+
+    if (value == 12) {
+        printf("Key pressed: #\n");
+    }
+}
+
+
+/*--------------------------------------------------------------
+ * Function:        Keypad_Init
+ * Description:     Initialize the keypad for use.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void Keypad_Init(void) {
+    P4->SEL0 &= ~0x7F;
+    P4->SEL1 &= ~0x7F;
+    P4->DIR &= ~0x7F;
+    P4->REN |= 0x7F;
+    P4->OUT |= 0x7F;
+}
+
+
+/*--------------------------------------------------------------
+ * Function:        SysTick_Init
+ * Description:     Initialize the SysTick delay component.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void SysTick_Init(void) {
+    SysTick->CTRL = 0;              // disable SysTick during step
+    SysTick->LOAD = 0x00FFFFFF;     // max reload value
+    SysTick->VAL = 0;               // any write to current value clears it
+    SysTick->CTRL = 0x00000005;     // enable SysTick (3 MHz) -> no interrupts
+}
+
+
+/*--------------------------------------------------------------
+ * Function:        SysTick_Delay
+ * Description:     Add a delay to make sure the button is
+ *                  being pressed and not just bouncing.
+ *
+ * Inputs:          (unsigned 16-bit int) delay: integer to set the
+ *                  length of the timer delay
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void SysTick_Delay(uint16_t delay) {
+    SysTick->LOAD = ((delay * 3000) - 1);           // delay for 1 millisecond per delay value
+    SysTick->VAL = 0;                               // any write to current value clears it
+    while ((SysTick->CTRL & 0x00010000) == 0);      // wait for flag to be set
+}
