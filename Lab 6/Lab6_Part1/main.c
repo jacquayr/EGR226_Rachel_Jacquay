@@ -4,7 +4,7 @@
  * Date:            02/28/2021
  * Project:         Lab 6 Part 1
  * File:            main_part1.c
- * Description:     This program takes takes in the input from a keypad and returns it
+ * Description:     This program takes in the input from a keypad and returns it
  *                  to the serial window in CCS for the user to view. If * or # are
  *                  pressed, the code has to know that their numbers need to be changed
  *                  to the characters, which much be output to the serial window with
