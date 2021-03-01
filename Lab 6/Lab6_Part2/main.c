@@ -1,3 +1,17 @@
+/*-----------------------------------------------------------------------------------------
+ * Author:          Rachel Jacquay
+ * Course:          EGR 226-902
+ * Date:            02/28/2021
+ * Project:         Lab 6 Part 2
+ * File:            main_part2.c
+ * Description:     This program takes takes in inputs from the user and outputs the last
+ *                  four numbers as the 4-digit code. If * is pressed, the code avoids it.
+ *                  When # is pressed, the code either tells the user to input more
+ *                  numbers so that there are enough for a 4-digit code, or it outputs
+ *                  the four most recently entered numbers. SysTick was used for the
+ *                  debounce function in this program.
+-----------------------------------------------------------------------------------------*/
+
 #include "msp.h"
 #include <stdio.h>
 

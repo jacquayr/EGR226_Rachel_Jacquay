@@ -5,10 +5,10 @@
  * Project:         Lab 6 Part 1
  * File:            main_part1.c
  * Description:     This program takes takes in the input from a keypad and returns it
- *                  to the serial window in CCS for the user to view. If * or # are
- *                  pressed, the code has to know that their numbers need to be changed
- *                  to the characters, which much be output to the serial window with
- *                  the other keys. SysTick is used as a debounce in this code.
+ *                  to the serial window in CCS for the user to view. The code uses the
+ *                  SysTick timer to debounce the switches. SysTick needs to be
+ *                  initialized in a separate function, and also requires an actual
+ *                  delay function.
 -----------------------------------------------------------------------------------------*/
 
 #include "msp.h"

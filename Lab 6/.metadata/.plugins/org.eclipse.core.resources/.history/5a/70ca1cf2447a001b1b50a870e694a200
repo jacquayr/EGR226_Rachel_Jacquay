@@ -1,15 +1,11 @@
-/*-----------------------------------------------------------------------------------------
- * Author:          Rachel Jacquay
- * Course:          EGR 226-902
- * Date:            02/28/2021
- * Project:         Lab 6 Part 1
- * File:            main_part1.c
- * Description:     This program takes takes in the input from a keypad and returns it
- *                  to the serial window in CCS for the user to view. If * or # are
- *                  pressed, the code has to know that their numbers need to be changed
- *                  to the characters, which much be output to the serial window with
- *                  the other keys. SysTick is used as a debounce in this code.
------------------------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------------
+ * Author:       Rachel Jacquay
+ * Course:       EGR 226-902
+ * Date:         02/28/2021
+ * Project:      Lab 6 Part 2
+ * File:         main_part2.c
+ * Description:  This program takes takes in the input from a keypad and
+-------------------------------------------------------------------------------------*/
 
 #include "msp.h"
 #include <stdio.h>
@@ -21,22 +17,54 @@ void Print_Keys(void);
 void SysTick_Init(void);
 void SysTick_Delay(uint16_t delay);
 
-uint8_t num, pressed;       // global variables
+// global variables
+uint8_t num, pressed;
 
 void main(void) {
-    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
-    Keypad_Init();                                  // initialize keypad
-    SysTick_Init();                                 // initialize systick
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;                 // pause watchdog timer
+    Keypad_Init();                                              // call keypad initialization function
+    SysTick_Init();                                             // call systick initialization function
+    int counter = 0;
+    int array[1000];
 
-    while(1) {
-        pressed = Read_Keypad();                    // call keypad read function and output to pressed
-        if (pressed) {                              // if a 1 is returned
-            Print_Keys();                        // call print keys function with num variable
-            SysTick_Delay(100);                     // delay
+    printf("Please enter 4 numbers and then press [#]:\n");     // tell user to input 4 numbers then press #
+
+    while(1) {                                  // always
+        pressed = Read_Keypad();                // call read keypad function then return either 0 for not pressed or 1 for pressed
+        if (pressed) {                          // if a 1 is returned and a key is pressed
+            Print_Keys();                       // print out the key
+            SysTick_Delay(1);                   // delay for 1 millisecond
+
+
+            if (num != 10 && num != 12) {       // if key pressed is not * or #
+                if (num == 11) {                // value 11 is turned into a 0
+                    num = 0;
+                }
+
+                array[counter] = num;           // set the array value equal to the num value
+                counter++;                      // increase counter
+            }
+
+            if (counter > 999) {                                        // if counter has too many entries
+                printf("Too many entries without pressing [#]\n");      // tell user
+                main();                                                 // call main again to restart program
+            }
+        }
+
+        if (num == 12) {                // if 12 (#) is pressed,
+            if (counter >= 4) {         // if user input 4 or more values
+                printf("%d %d %d %d\n", array[counter - 4], array[counter - 3], array[counter - 2], array[counter - 1]);        // print 4 value code out
+                counter = 0;            // reset counter and num to 0
+                num = 0;
+            }
+
+            else {                      // if user input less than 4 values
+                printf("Please enter more numbers and then enter [#]\n");       // tell user to enter more values
+                num = 0;                // reset num to 0 to break out of loop
             }
         }
     }
-
+}
 
 
 /*--------------------------------------------------------------
@@ -81,7 +109,7 @@ uint8_t Read_Keypad(void) {
     if (row == 0x07)        // key in row 3
         num = 9 + col + 1;
 
-    return 1;       // return 1 for something is pressed
+    return 1;               // return 1 for something is pressed
 }
 
 

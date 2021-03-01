@@ -1,18 +1,15 @@
-/*-----------------------------------------------------------------------------------------
- * Author:          Rachel Jacquay
- * Course:          EGR 226-902
- * Date:            02/28/2021
- * Project:         Lab 6 Part 1
- * File:            main_part1.c
- * Description:     This program takes takes in the input from a keypad and returns it
- *                  to the serial window in CCS for the user to view. If * or # are
- *                  pressed, the code has to know that their numbers need to be changed
- *                  to the characters, which much be output to the serial window with
- *                  the other keys. SysTick is used as a debounce in this code.
------------------------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------------
+ * Author:       Rachel Jacquay
+ * Course:       EGR 226-902
+ * Date:         02/28/2021
+ * Project:      Lab 6 Part 1
+ * File:         main_part1.c
+ * Description:  This program takes takes in the input from a keypad and
+-------------------------------------------------------------------------------------*/
 
 #include "msp.h"
 #include <stdio.h>
+
 
 // function prototypes
 void Keypad_Init(void);
@@ -21,7 +18,9 @@ void Print_Keys(void);
 void SysTick_Init(void);
 void SysTick_Delay(uint16_t delay);
 
+
 uint8_t num, pressed;       // global variables
+
 
 void main(void) {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
