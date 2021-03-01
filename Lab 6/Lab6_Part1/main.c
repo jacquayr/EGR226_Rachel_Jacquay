@@ -5,7 +5,7 @@
 // function prototypes
 void Keypad_Init(void);
 uint8_t Read_Keypad(void);
-void Print_Keys(uint8_t value);
+void Print_Keys(void);
 void SysTick_Init(void);
 void SysTick_Delay(uint16_t delay);
 
@@ -21,7 +21,7 @@ void main(void) {
     while(1) {
         pressed = Read_Keypad();                    // call keypad read function and output to pressed
         if (pressed) {                              // if a 1 is returned
-            Print_Keys(num);                        // call print keys function with num variable
+            Print_Keys();                        // call print keys function with num variable
             SysTick_Delay(100);                     // delay
             }
         }
@@ -85,21 +85,21 @@ uint8_t Read_Keypad(void) {
  *
  * Outputs:         none
  *-------------------------------------------------------------*/
-void Print_Keys(uint8_t value) {
-    if (value >= 1 && value <= 9) {             // if the num value is 1-9
-        printf("Key pressed: %d\n", value);     // print value of num
+void Print_Keys(void) {
+    if (num >= 1 && num <= 9) {               // if the num value is 1-9
+        printf("Key pressed: %d\n", num);     // print value of num
     }
 
-    if (value == 10) {                          // if num val is 10
-        printf("Key pressed: *\n");             // print *
+    if (num == 10) {                          // if num val is 10
+        printf("Key pressed: *\n");           // print *
     }
 
-    if (value == 11) {                          // if num val is 11
-        printf("Key pressed: 0\n");             // print 0
+    if (num == 11) {                          // if num val is 11
+        printf("Key pressed: 0\n");           // print 0
     }
 
-    if (value == 12) {                          // if num val is 12
-        printf("Key pressed: #\n");             // print #
+    if (num == 12) {                          // if num val is 12
+        printf("Key pressed: #\n");           // print #
     }
 }
 

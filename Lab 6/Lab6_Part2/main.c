@@ -1,31 +1,61 @@
 #include "msp.h"
 #include <stdio.h>
 
-
+// function prototypes
 void Keypad_Init(void);
 uint8_t Read_Keypad(void);
-void Print_Keys(uint8_t value);
+void Print_Keys(void);
 void SysTick_Init(void);
 void SysTick_Delay(uint16_t delay);
 
-
+// global variables
 uint8_t num, pressed;
 
-
 void main(void) {
-    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;
-    Keypad_Init();
-    SysTick_Init();
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;                 // pause watchdog timer
+    Keypad_Init();                                              // call keypad initialization function
+    SysTick_Init();                                             // call systick initialization function
+    int counter = 0;
+    int array[1000];
 
-    while(1) {
-        pressed = Read_Keypad();
-        if (pressed) {
-            Print_Keys(num);
-            SysTick_Delay(1000);
+    printf("Please enter 4 numbers and then press [#]:\n");     // tell user to input 4 numbers then press #
+
+    while(1) {                                  // always
+        pressed = Read_Keypad();                // call read keypad function then return either 0 for not pressed or 1 for pressed
+        if (pressed) {                          // if a 1 is returned and a key is pressed
+            Print_Keys();                       // print out the key
+            SysTick_Delay(1);                   // delay for 1 millisecond
+
+
+            if (num != 10 && num != 12) {       // if key pressed is not * or #
+                if (num == 11) {                // value 11 is turned into a 0
+                    num = 0;
+                }
+
+                array[counter] = num;           // set the array value equal to the num value
+                counter++;                      // increase counter
+            }
+
+            if (counter > 999) {                                        // if counter has too many entries
+                printf("Too many entries without pressing [#]\n");      // tell user
+                main();                                                 // call main again to restart program
+            }
+        }
+
+        if (num == 12) {                // if 12 (#) is pressed,
+            if (counter >= 4) {         // if user input 4 or more values
+                printf("%d %d %d %d\n", array[counter - 4], array[counter - 3], array[counter - 2], array[counter - 1]);        // print 4 value code out
+                counter = 0;            // reset counter and num to 0
+                num = 0;
+            }
+
+            else {                      // if user input less than 4 values
+                printf("Please enter more numbers and then enter [#]\n");       // tell user to enter more values
+                num = 0;                // reset num to 0 to break out of loop
             }
         }
     }
-
+}
 
 
 /*--------------------------------------------------------------
@@ -42,35 +72,35 @@ void main(void) {
 uint8_t Read_Keypad(void) {
     uint8_t col, row;
 
-    for (col = 0; col < 3; col++) {
-        P4->DIR = 0x00;
-        P4->DIR |= BIT(4 + col);
-        P4->OUT &= ~BIT(4 + col);
+    for (col = 0; col < 3; col++) {         // check each column
+        P4->DIR = 0x00;                     // set columns to inputs
+        P4->DIR |= BIT(4 + col);            // set column 3 to output
+        P4->OUT &= ~BIT(4 + col);           // set column 3 to low
 
-        SysTick_Delay(10);
-        row = P4->IN & 0x0F;
+        SysTick_Delay(10);                  // call systick delay
+        row = P4->IN & 0x0F;                // read all rows
 
-        while ( !(P4IN & BIT0) | !(P4IN & BIT1) |!(P4IN & BIT2) |!(P4IN & BIT3) );
+        while ( !(P4IN & BIT0) | !(P4IN & BIT1) |!(P4IN & BIT2) |!(P4IN & BIT3) );      // while nothing is pressed
 
-        if (row != 0x0F)
-            break;
+        if (row != 0x0F)    // if something is pressed
+            break;          // break out of for loop
     }
 
-    P2->DIR = 0x00;
+    P2->DIR = 0x00;         // set columns in inputs
 
-    if (col == 3)
+    if (col == 3)           // nothing is pressed, return 0
         return 0;
 
-    if (row == 0x0E)
+    if (row == 0x0E)        // key in row 0
         num = col + 1;
-    if (row == 0x0D)
+    if (row == 0x0D)        // key in row 1
         num = 3 + col + 1;
-    if (row == 0x0B)
+    if (row == 0x0B)        // key in row 2
         num = 6 + col + 1;
-    if (row == 0x07)
+    if (row == 0x07)        // key in row 3
         num = 9 + col + 1;
 
-    return 1;
+    return 1;               // return 1 for something is pressed
 }
 
 
@@ -84,21 +114,21 @@ uint8_t Read_Keypad(void) {
  *
  * Outputs:         none
  *-------------------------------------------------------------*/
-void Print_Keys(uint8_t value) {
-    if (value >= 1 && value <= 9) {
-        printf("Key pressed: %d\n", value);
+void Print_Keys(void) {
+    if (num >= 1 && num <= 9) {               // if the num value is 1-9
+        printf("Key pressed: %d\n", num);     // print value of num
     }
 
-    if (value == 10) {
-        printf("Key pressed: *\n");
+    if (num == 10) {                          // if num val is 10
+        printf("Key pressed: *\n");           // print *
     }
 
-    if (value == 11) {
-        printf("Key pressed: 0\n");
+    if (num == 11) {                          // if num val is 11
+        printf("Key pressed: 0\n");           // print 0
     }
 
-    if (value == 12) {
-        printf("Key pressed: #\n");
+    if (num == 12) {                          // if num val is 12
+        printf("Key pressed: #\n");           // print #
     }
 }
 
@@ -111,12 +141,12 @@ void Print_Keys(uint8_t value) {
  *
  * Outputs:         none
  *-------------------------------------------------------------*/
-void Keypad_Init(void) {
-    P4->SEL0 &= ~0x7F;
+void Keypad_Init(void) {        // initializing the keypad
+    P4->SEL0 &= ~0x7F;          // enable simple I/O
     P4->SEL1 &= ~0x7F;
-    P4->DIR &= ~0x7F;
-    P4->REN |= 0x7F;
-    P4->OUT |= 0x7F;
+    P4->DIR &= ~0x7F;           // set as input
+    P4->REN |= 0x0F;            // enable internal resistor
+    P4->OUT |= 0x0F;            // enable pull up resistor
 }
 
 
