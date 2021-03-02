@@ -14,6 +14,7 @@
 
 #include "msp.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 // function prototypes
 void Keypad_Init(void);
