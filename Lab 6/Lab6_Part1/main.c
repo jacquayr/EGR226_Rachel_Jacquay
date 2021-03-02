@@ -43,7 +43,8 @@ void main(void) {
 /*--------------------------------------------------------------
  * Function:        Read_Keypad
  * Description:     Read the keys that are being pressed on the
- *                  keypad.
+ *                  keypad. This code was taken from the lecture
+ *                  slides provided by Professor Krug.
  *
  * Inputs:          none
  *
