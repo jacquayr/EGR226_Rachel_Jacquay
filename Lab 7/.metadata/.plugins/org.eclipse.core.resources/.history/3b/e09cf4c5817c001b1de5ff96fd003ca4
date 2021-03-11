@@ -1,0 +1,36 @@
+#include "msp.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+void SysTick_Init(void);
+void delay_micro(uint36_t microsecond);
+
+void main(void)
+{
+	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
+
+}
+
+void SysTick_Init(void) {
+    SysTick->CTRL = 0;
+    SysTick->LOAD = 0x00FFFFFF;
+    SysTick->VAL = 0;
+    SysTick->CTRL = 0x00000005;
+}
+
+void delay_micro(uint36_t microsecond) {
+    SysTick->LOAD = (microsecond * 3 - 1);
+    SysTick->VAL = 0;
+    while((SysTick->CTRL & 0x00010000) == 0);
+}
+
+void PulseEnablePin(void) {
+    P4->OUT &= ~BIT2;
+    delay_micro(10);
+
+    P4->OUT |= BIT2;
+    delay_micro(10);
+
+    P4->OUT &= ~BIT2;
+    delay_micro(10);
+}

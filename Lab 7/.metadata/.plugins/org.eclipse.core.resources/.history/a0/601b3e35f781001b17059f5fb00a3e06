@@ -1,0 +1,150 @@
+#include "msp.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+void SysTick_Init(void);
+void LCD_Init(void);
+void Pin_Init(void);
+void SysTick_Delay(uint8_t delay);
+void delay_micro(uint32_t microsecond);
+void delay_milli(uint32_t millisecond);
+void PulseEnablePin(void);
+void pushNibble(uint8_t nibble);
+void pushByte(uint8_t byte);
+void commandWrite(uint8_t command);
+void dataWrite(uint8_t data);
+
+void main(void)
+{
+	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
+	SysTick_Init();                                 // initializations
+	Pin_Init();
+	LCD_Init();
+
+	while (1) {
+
+	}
+}
+
+void SysTick_Init(void) {
+    SysTick->CTRL = 0;
+    SysTick->LOAD = 0x00FFFFFF;
+    SysTick->VAL = 0;
+    SysTick->CTRL = 0x00000005;
+}
+
+void Pin_Init(void) {
+    // pin 2.6 and pin 2.7
+    P2->SEL0 &= ~0xC0;
+    P2->SEL1 &= ~0xC0;
+    P2->DIR &= ~0xC0;
+    P2->REN |= 0xC0;
+    P2->OUT |= 0xC0;
+
+    // pin 5.6
+    P5->SEL0 &= ~BIT6;
+    P5->SEL1 &= ~BIT6;
+    P5->DIR &= ~BIT6;
+    P5->REN |= BIT6;
+    P5->OUT |= BIT6;
+
+    // pin 6.6 and pin 6.7
+    P6->SEL0 &= ~0xC0;
+    P6->SEL1 &= ~0xC0;
+    P6->DIR &= ~0xC0;
+    P6->REN |= 0xC0;
+    P6->OUT |= 0xC0;
+
+    // pin 2.3
+    P2->SEL0 &= ~BIT3;
+    P2->SEL1 &= ~BIT3;
+    P2->DIR &= ~BIT3;
+    P2->REN |= BIT3;
+    P2->OUT |= BIT3;
+}
+
+void SysTick_Delay(uint8_t delay) {
+    SysTick->LOAD = ((delay * 3000) - 1);           // delay for 1 millisecond per delay value
+    SysTick->VAL = 0;                               // any write to current value clears it
+    while ((SysTick->CTRL & 0x00010000) == 0);      // wait for flag to be set
+}
+
+void delay_micro(uint32_t microsecond) {
+    SysTick->LOAD = (microsecond * 3 - 1);
+    SysTick->VAL = 0;
+    while((SysTick->CTRL & 0x00010000) == 0);
+}
+
+void delay_milli(uint32_t millisecond) {
+    SysTick->LOAD = (millisecond * 3000 - 1);
+    SysTick->VAL = 0;
+    while((SysTick->CTRL & 0x00010000) == 0);
+}
+
+void PulseEnablePin(void) {
+    P4OUT &= ~BIT2;
+    delay_micro(10);
+
+    P4OUT |= BIT2;
+    delay_micro(10);
+
+    P4OUT &= ~BIT2;
+    delay_micro(10);
+}
+
+void pushNibble(uint8_t nibble) {
+    // DB4
+    P5OUT &= ~BIT6;
+    P5OUT |= (nibble & BIT6) << 4;
+
+    // DB5 and DB6
+    P6OUT &= ~0xC0;
+    P6OUT |= (nibble & 0xC0) << 4;
+
+    // DB7
+    P2OUT &= ~BIT3;
+    P2OUT |= (nibble & BIT3) << 4;
+
+    PulseEnablePin();
+}
+
+void pushByte(uint8_t byte) {
+    uint8_t nibble;
+
+    nibble = (byte & 0xF0) >> 4;
+    pushNibble(nibble);
+    nibble = byte & 0x0F;
+    pushNibble(nibble);
+    delay_micro(100);
+}
+
+void LCD_Init(void) {
+    commandWrite(3);
+    SysTick_Delay(100);
+    commandWrite(3);
+    SysTick_Delay(200);
+    commandWrite(3);
+    SysTick_Delay(100);
+    commandWrite(2);
+
+    SysTick_Delay(100);
+    commandWrite(0x28);
+    SysTick_Delay(100);
+
+    SysTick_Delay(100);
+    commandWrite(0x0F);
+    SysTick_Delay(100);
+    commandWrite(0x01);
+    SysTick_Delay(100);
+    commandWrite(0x06);
+    SysTick_Delay(10);
+}
+
+void commandWrite(uint8_t command) {
+    P2->OUT & ~BIT7;
+    pushByte(command);
+}
+
+void dataWrite(uint8_t data) {
+    pushByte(data);
+}

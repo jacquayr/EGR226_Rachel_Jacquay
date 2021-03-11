@@ -1,0 +1,89 @@
+#include "msp.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+void SysTick_Init(void);
+void SysTick_Delay(uint8_t delay);
+void delay_micro(uint32_t microsecond);
+void PulseEnablePin(void);
+void pushNibble(uint8_t nibble);
+void pushByte(uint8_t byte);
+
+void main(void)
+{
+	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
+	SysTick_init();
+	LCD_init();
+}
+
+void SysTick_init(void) {
+    SysTick->CTRL = 0;
+    SysTick->LOAD = 0x00FFFFFF;
+    SysTick->VAL = 0;
+    SysTick->CTRL = 0x00000005;
+}
+
+void SysTick_Delay(uint8_t delay) {
+    SysTick->LOAD = ((delay * 3000) - 1);           // delay for 1 millisecond per delay value
+    SysTick->VAL = 0;                               // any write to current value clears it
+    while ((SysTick->CTRL & 0x00010000) == 0);      // wait for flag to be set
+}
+
+void delay_micro(uint32_t microsecond) {
+    SysTick->LOAD = (microsecond * 3 - 1);
+    SysTick->VAL = 0;
+    while((SysTick->CTRL & 0x00010000) == 0);
+}
+
+void PulseEnablePin(void) {
+    P4OUT &= ~BIT2;
+    delay_micro(10);
+
+    P4OUT |= BIT2;
+    delay_micro(10);
+
+    P4OUT &= ~BIT2;
+    delay_micro(10);
+}
+
+void pushNibble(uint8_t nibble) {
+    P4OUT &= ~0xF0;
+    P4OUT |= (nibble & 0x0F) << 4;
+    PulseEnablePin();
+}
+
+void pushByte(uint8_t byte) {
+    uint8_t nibble;
+
+    nibble = (byte & 0xF0) >> 4;
+    pushNibble(nibble);
+    nibble = byte & 0x0F;
+    pushNibble(nibble);
+    delay_micro(100);
+}
+
+void LCD_init(void) {
+    P2->SEL0 &= ~0xC0;
+    P2->SEL1 &= ~0xC0;
+    P2->DIR &= ~0xC0;
+    P2->REN |= 0xC0;
+    P2->OUT |= 0xC0;
+
+    P5->SEL0 &= ~BIT6;
+    P5->SEL1 &= ~BIT6;
+    P5->DIR &= ~BIT6;
+    P5->REN |= BIT6;
+    P5->OUT |= BIT6;
+
+    P6->SEL0 &= ~0xC0;
+    P6->SEL1 &= ~0xC0;
+    P6->DIR &= ~0xC0;
+    P6->REN |= 0xC0;
+    P6->OUT |= 0xC0;
+
+    P5->SEL0 &= ~BIT6;
+    P5->SEL1 &= ~BIT6;
+    P5->DIR &= ~BIT6;
+    P5->REN |= BIT6;
+    P5->OUT |= BIT6;
+}
