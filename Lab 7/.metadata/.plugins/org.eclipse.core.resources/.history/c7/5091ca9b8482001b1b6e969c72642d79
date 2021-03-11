@@ -35,8 +35,6 @@ void main(void)
         lab();
         commandWrite(0x01);     // clear
         delay_milli(50);
-        commandWrite(0x80);     // set cursor to first line
-        delay_milli(50);
 
         move();
         delay_milli(50);
@@ -212,18 +210,16 @@ void move(void) {
     strcpy(lab, "LABORATORY OVER ");
 
     //commandWrite(0x01);
-    //commandWrite(0x80);
 
     for (i = 0; i < 16; i++) {
         for (j = 0; j < 16; j++) {
-            dataWrite(lab[i]);          // lines 216-217 are NEW
+            dataWrite(lab[i]);          // lines 212-215 are NEW
             delay_milli(50);
 
             temp[j] = lab[j + 1];
             lab[j] = temp[j];
             dataWrite(lab[j]);
         }
-
         //delay_milli(50);
         //commandWrite(0x80);
     }

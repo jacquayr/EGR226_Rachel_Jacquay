@@ -212,7 +212,6 @@ void move(void) {
     strcpy(lab, "LABORATORY OVER ");
 
     //commandWrite(0x01);
-    //commandWrite(0x80);
 
     for (i = 0; i < 16; i++) {
         for (j = 0; j < 16; j++) {
@@ -223,7 +222,6 @@ void move(void) {
             lab[j] = temp[j];
             dataWrite(lab[j]);
         }
-
         //delay_milli(50);
         //commandWrite(0x80);
     }
