@@ -1,3 +1,12 @@
+/*-----------------------------------------------------------------------------------------
+ * Author:          Rachel Jacquay
+ * Course:          EGR 226-902
+ * Date:            03/17/2021
+ * Project:         Lab 7 Part 2
+ * File:            main_part2.c
+ * Description:
+-----------------------------------------------------------------------------------------*/
+
 #include "msp.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,7 +15,6 @@
 void SysTick_Init(void);
 void LCD_Init(void);
 void Pin_Init(void);
-void SysTick_Delay(uint8_t delay);
 void delay_micro(uint32_t microsecond);
 void delay_milli(uint32_t millisecond);
 void PulseEnablePin(void);
@@ -57,6 +65,14 @@ void main(void)
     }
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void SysTick_Init(void) {
     SysTick->CTRL = 0;
     SysTick->LOAD = 0x00FFFFFF;
@@ -64,6 +80,14 @@ void SysTick_Init(void) {
     SysTick->CTRL = 0x00000005;
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void Pin_Init(void) {
     // pin 3.0 = RS
     P3->SEL0 &= ~BIT0;
@@ -104,24 +128,42 @@ void Pin_Init(void) {
     delay_milli(60);
 }
 
-void SysTick_Delay(uint8_t delay) {
-    SysTick->LOAD = ((delay * 3000) - 1);           // delay for 1 millisecond per delay value
-    SysTick->VAL = 0;                               // any write to current value clears it
-    while ((SysTick->CTRL & 0x00010000) == 0);      // wait for flag to be set
-}
-
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void delay_micro(uint32_t microsecond) {
     SysTick->LOAD = ((microsecond * 3) - 1);
     SysTick->VAL = 0;
     while((SysTick->CTRL & 0x00010000) == 0);
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void delay_milli(uint32_t millisecond) {
-    SysTick->LOAD = ((millisecond * 3000) - 1);
-    SysTick->VAL = 0;
-    while((SysTick->CTRL & 0x00010000) == 0);
+    SysTick->LOAD = ((millisecond * 3000) - 1);     // delay for 1 millisecond per delay value
+    SysTick->VAL = 0;                               // any write to current value clears it
+    while((SysTick->CTRL & 0x00010000) == 0);       // wait for flag to be set
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void PulseEnablePin(void) {
     P5OUT &= ~BIT7;
     delay_micro(50);
@@ -133,6 +175,14 @@ void PulseEnablePin(void) {
     delay_micro(50);
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void pushNibble(uint8_t nibble) {
     P1OUT &= ~0x40;
     P1OUT &= ~0x80;
@@ -166,6 +216,14 @@ void pushNibble(uint8_t nibble) {
     PulseEnablePin();
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void pushByte(uint8_t byte) {
     uint8_t nibble;
 
@@ -176,6 +234,14 @@ void pushByte(uint8_t byte) {
     delay_micro(100);
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void LCD_Init(void) {
     commandWrite(0x3);
     delay_milli(100);
@@ -198,16 +264,40 @@ void LCD_Init(void) {
     delay_milli(10);
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void commandWrite(uint32_t command) {
     P3->OUT &= ~BIT0;
     pushByte(command);
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void dataWrite(uint32_t data) {
     P3->OUT |= BIT0;
     pushByte(data);
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void firstname(void) {
     int i;
     char firstname[6];
@@ -219,6 +309,14 @@ void firstname(void) {
     }
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void lastname(void) {
     int i;
     char lastname[7];
@@ -230,6 +328,14 @@ void lastname(void) {
     }
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void egr(void) {
     int i;
     char egr[3];
@@ -241,6 +347,14 @@ void egr(void) {
     }
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void num(void) {
     int i;
     char num[3];
@@ -252,16 +366,40 @@ void num(void) {
     }
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void line2(void) {
     commandWrite(0xC4);
     delay_micro(100);
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void line3(void) {
     commandWrite(0x96);
     delay_micro(100);
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void line4(void) {
     commandWrite(0xD6);
     delay_micro(100);

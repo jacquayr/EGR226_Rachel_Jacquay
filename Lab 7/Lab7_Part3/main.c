@@ -1,3 +1,12 @@
+/*-----------------------------------------------------------------------------------------
+ * Author:          Rachel Jacquay
+ * Course:          EGR 226-902
+ * Date:            03/17/2021
+ * Project:         Lab 7 Part 3
+ * File:            main_part3.c
+ * Description:
+-----------------------------------------------------------------------------------------*/
+
 #include "msp.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,7 +15,6 @@
 void SysTick_Init(void);
 void LCD_Init(void);
 void Pin_Init(void);
-void SysTick_Delay(uint8_t delay);
 void delay_micro(uint32_t microsecond);
 void delay_milli(uint32_t millisecond);
 void PulseEnablePin(void);
@@ -33,16 +41,22 @@ void main(void)
         delay_milli(50);
 
         lab();
-        commandWrite(0x01);     // clear
-        delay_milli(50);
         commandWrite(0x80);     // set cursor to first line
         delay_milli(50);
 
         move();
-        delay_milli(50);
+        //delay_milli(500);
     }
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void SysTick_Init(void) {
     SysTick->CTRL = 0;
     SysTick->LOAD = 0x00FFFFFF;
@@ -50,6 +64,14 @@ void SysTick_Init(void) {
     SysTick->CTRL = 0x00000005;
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void Pin_Init(void) {
     // pin 3.0 = RS
     P3->SEL0 &= ~BIT0;
@@ -90,24 +112,42 @@ void Pin_Init(void) {
     delay_milli(60);
 }
 
-void SysTick_Delay(uint8_t delay) {
-    SysTick->LOAD = ((delay * 3000) - 1);           // delay for 1 millisecond per delay value
-    SysTick->VAL = 0;                               // any write to current value clears it
-    while ((SysTick->CTRL & 0x00010000) == 0);      // wait for flag to be set
-}
-
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void delay_micro(uint32_t microsecond) {
     SysTick->LOAD = ((microsecond * 3) - 1);
     SysTick->VAL = 0;
     while((SysTick->CTRL & 0x00010000) == 0);
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void delay_milli(uint32_t millisecond) {
-    SysTick->LOAD = ((millisecond * 3000) - 1);
-    SysTick->VAL = 0;
-    while((SysTick->CTRL & 0x00010000) == 0);
+    SysTick->LOAD = ((millisecond * 3000) - 1);     // delay for 1 millisecond per delay value
+    SysTick->VAL = 0;                               // any write to current value clears it
+    while((SysTick->CTRL & 0x00010000) == 0);       // wait for flag to be set
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void PulseEnablePin(void) {
     P5OUT &= ~BIT7;
     delay_micro(50);
@@ -119,6 +159,14 @@ void PulseEnablePin(void) {
     delay_micro(50);
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void pushNibble(uint8_t nibble) {
     P1OUT &= ~0x40;
     P1OUT &= ~0x80;
@@ -152,6 +200,14 @@ void pushNibble(uint8_t nibble) {
     PulseEnablePin();
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void pushByte(uint8_t byte) {
     uint8_t nibble;
 
@@ -162,6 +218,14 @@ void pushByte(uint8_t byte) {
     delay_micro(100);
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void LCD_Init(void) {
     commandWrite(0x3);
     delay_milli(100);
@@ -184,47 +248,77 @@ void LCD_Init(void) {
     delay_milli(10);
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void commandWrite(uint32_t command) {
     P3->OUT &= ~BIT0;
     pushByte(command);
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void dataWrite(uint32_t data) {
     P3->OUT |= BIT0;
     pushByte(data);
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void lab(void) {
     int i;
-    char lab[16];                       // could change to 16 and add space after
-    strcpy(lab, "LABORATORY OVER ");
+    char lab[15];                       // could change to 16 and add space after
+    strcpy(lab, "LABORATORY OVER");
 
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < 15; i++) {
         dataWrite(lab[i]);
     }
 }
 
+/*--------------------------------------------------------------
+ * Function:
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
 void move(void) {
     int i;
     int j;
     char lab[16];
     char temp[16];
-    strcpy(lab, "LABORATORY OVER ");
+    strcpy(lab, " LABORATORY OVER");
 
     //commandWrite(0x01);
     //commandWrite(0x80);
 
     for (i = 0; i < 16; i++) {
         for (j = 0; j < 16; j++) {
-            dataWrite(lab[i]);          // lines 216-217 are NEW
-            delay_milli(50);
-
             temp[j] = lab[j + 1];
             lab[j] = temp[j];
             dataWrite(lab[j]);
         }
 
+        delay_milli(500);
+        commandWrite(0x80);
         //delay_milli(50);
-        //commandWrite(0x80);
     }
 }
