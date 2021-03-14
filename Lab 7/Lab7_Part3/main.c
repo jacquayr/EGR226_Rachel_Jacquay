@@ -24,12 +24,11 @@ void delay_milli(uint32_t millisecond);
 void PulseEnablePin(void);
 void pushNibble(uint8_t nibble);
 void pushByte(uint8_t byte);
-void commandWrite(uint32_t command);
-void dataWrite(uint32_t data);
+void commandWrite(uint8_t command);
+void dataWrite(uint8_t data);
 
-void labPrint(void);
-void moveToLeft(void);
-void moveFromRight(void);
+void print(void);
+void scroll(void);
 
 void main(void)
 {
@@ -38,23 +37,140 @@ void main(void)
     Pin_Init();
     LCD_Init();
 
-    commandWrite(0x01);         // clear screen
-    delay_milli(50);            // delay 50 ms
+    commandWrite(0x0C);     // turn cursor off
+    delay_milli(10);        // delay 10 ms
+
+    commandWrite(0x01);     // clear screen
+    delay_milli(500);       // delay 500 ms
 
     while (1) {
-        commandWrite(0x80);     // set cursor to first line
-        delay_milli(50);        // delay 50 ms
-
-        labPrint();             // call phrase printing function
-        commandWrite(0x80);     // set cursor to first line
-        delay_milli(50);        // delay 50 ms
-
-        moveToLeft();           // call move function
-        delay_milli(10);        // delay 10 ms
-
-        moveFromRight();
+        print();        // call print function
+        scroll();       // call scroll function
     }
 }
+
+/*--------------------------------------------------------------
+ * Function:        print
+ *
+ * Description:     This function initially prints the phrase
+ *                  out on the LCD screen.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void print(void) {
+    int i;
+    char lab[15];
+    strcpy(lab, "LABORATORY OVER");     // set lab string
+
+    commandWrite(0x80);             // set to first line home position
+    delay_micro(10);                // delay 10 ms
+
+    for (i = 0; i < 15; i++) {
+        dataWrite(lab[i]);          // write out each individual letter
+        delay_milli(10);            // delay 10 ms
+    }
+
+    delay_milli(500);               // delay 500 ms for 1 sec pause
+}
+
+/*--------------------------------------------------------------
+ * Function:        scroll
+ *
+ * Description:     This function moves the phrase left from the
+ *                  starting spot until the screen is blank, and
+ *                  then it moves it left from the right side.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void scroll(void) {
+    int i;
+    int j;
+    char lab[15];
+    char space[1];
+    strcpy(lab, "LABORATORY OVER");     // set lab string
+    strcpy(space, " ");                 // set space string
+
+    while (1) {                         // loop
+        for (i = 0; i < 15; i++) {      // move letters left until blank screen
+            commandWrite(0x18);         // move cursor left
+            delay_milli(500);           // delay 500 ms for 1 sec pause
+
+            if (i == 7) {               // once i reaches 7, add blank space
+                commandWrite(0x80);     // move to first space first line
+                delay_milli(10);        // delay 10 ms
+                dataWrite(space[0]);    // write blank space
+                delay_milli(10);        // delay 10 ms
+            }
+
+            if (i == 8) {               // once i reaches 8, add blank space
+                commandWrite(0x81);     // move to second space first line
+                delay_milli(10);        // delay 10 ms
+                dataWrite(space[0]);    // write blank space
+                delay_milli(10);        // delay 10 ms
+            }
+
+            if (i == 9) {               // once i reaches 9, add blank space
+                commandWrite(0x82);     // move to third space first line
+                delay_milli(10);        // delay 10 ms
+                dataWrite(space[0]);    // write blank space
+                delay_milli(10);        // delay 10 ms
+            }
+
+            if (i == 10) {              // once i reaches 10, add blank space
+                commandWrite(0x83);     // move to fourth space first line
+                delay_milli(10);        // delay 10 ms
+                dataWrite(space[0]);    // write blank space
+                delay_milli(10);        // delay 10 ms
+            }
+
+            if (i == 11) {              // once i reaches 11, add blank space
+                commandWrite(0x84);     // move to fifth space first line
+                delay_milli(10);        // delay 10 ms
+                dataWrite(space[0]);    // write blank space
+                delay_milli(10);        // delay 10 ms
+            }
+
+            if (i == 12) {              // once i reaches 12, add blank space
+                commandWrite(0x85);     // move to sixth space first line
+                delay_milli(10);        // delay 10 ms
+                dataWrite(space[0]);    // write blank space
+                delay_milli(10);        // delay 10 ms
+            }
+
+            if (i == 13) {              // once i reaches 13, add blank space
+                commandWrite(0x86);     // move to seventh space first line
+                delay_milli(10);        // delay 10 ms
+                dataWrite(space[0]);    // write blank space
+                delay_milli(10);        // delay 10 ms
+            }
+        }
+
+        commandWrite(0x01);             // clear screen
+        delay_milli(100);               // delay 100 ms
+
+        for (j = 0; j < 15; j++) {      // move cursor right
+            commandWrite(0x1C);         // move cursor to the right side of screen
+            delay_milli(10);            // delay 10 ms
+        }
+
+        commandWrite(0x80);             // move cursor back to first row home position
+        delay_milli(100);               // delay 100 ms
+
+        for (j = 0; j < 15; j++) {      // move letters left from right side
+            dataWrite(lab[j]);          // print letters individually
+            delay_milli(500);           // delay 500 ms
+            commandWrite(0x18);         // move cursor left
+            delay_milli(10);            // delay 10 ms
+        }
+
+        delay_milli(500);               // delay 500 ms for 1 sec pause
+    }
+}
+
 
 /*--------------------------------------------------------------
  * Function:        SysTick_Init
@@ -319,75 +435,4 @@ void commandWrite(uint8_t command) {
 void dataWrite(uint8_t data) {
     P3->OUT |= BIT0;    // turn RS pin to data (1)
     pushByte(data);     // calls pushByte function
-}
-
-/*--------------------------------------------------------------
- * Function:        labPrint
- *
- * Description:     This function prints out the phrase on the
- *                  first line of the LCD.
- *
- * Inputs:          none
- *
- * Outputs:         none
- *-------------------------------------------------------------*/
-void labPrint(void) {
-    int i;
-    char lab[15];                       // could change to 16 and add space after
-    strcpy(lab, "LABORATORY OVER");
-
-    for (i = 0; i < 15; i++) {
-        dataWrite(lab[i]);
-        delay_milli(10);
-    }
-}
-
-/*--------------------------------------------------------------
- * Function:        moveToLeft
- *
- * Description:     This function moves the phrase left from the
- *                  starting spot until the screen is blank.
- *
- * Inputs:          none
- *
- * Outputs:         none
- *-------------------------------------------------------------*/
-void moveToLeft(void) {
-    int i;
-    int j;
-    char lab[16];
-    char temp[16];
-    strcpy(lab, " LABORATORY OVER");
-
-
-    for (i = 0; i < 16; i++) {
-        for (j = 0; j < 16; j++) {
-            temp[j] = lab[j + 1];
-            lab[j] = temp[j];
-            dataWrite(lab[j]);
-        }
-
-        delay_milli(500);
-        commandWrite(0x80);
-        delay_milli(10);
-    }
-}
-
-/*--------------------------------------------------------------
- * Function:        moveFromRight
- *
- * Description:     This function moves the phrase left from the
- *                  right side until the phrase reaches the home
- *                  position on the left side of the screen.
- *
- * Inputs:          none
- *
- * Outputs:         none
- *-------------------------------------------------------------*/
-void moveFromRight(void) {
-    int i;
-    int j;
-    char lab[16];
-    char temp[16];
-    strcpy(lab, " LABORATORY OVER");
 }

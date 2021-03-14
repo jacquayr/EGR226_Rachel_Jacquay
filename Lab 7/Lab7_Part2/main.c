@@ -59,6 +59,106 @@ void main(void)
 }
 
 /*--------------------------------------------------------------
+ * Function:        firstname
+ *
+ * Description:     This function sends the LCD cursor to the
+ *                  beginning of line 1 and then prints out the
+ *                  first name string.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void firstname(void) {
+    int i;
+    char firstname[6];
+    strcpy(firstname, "Rachel");    // set first name string
+
+    commandWrite(0x85);             // send cursor to first line
+    delay_milli(10);                // delay 10 ms
+
+    for (i = 0; i < 6; i++) {
+        dataWrite(firstname[i]);    // print out each letter
+        delay_milli(10);            // delay 10 ms
+    }
+}
+
+/*--------------------------------------------------------------
+ * Function:        lastname
+ *
+ * Description:     This function sends the LCD cursor to the
+ *                  beginning of line 2 and then prints out the
+ *                  last name string.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void lastname(void) {
+    int i;
+    char lastname[7];
+    strcpy(lastname, "Jacquay");    // set last name string
+
+    commandWrite(0xC4);             // send cursor to second line
+    delay_micro(10);                // delay 10 ms
+
+    for (i = 0; i < 7; i++) {
+        dataWrite(lastname[i]);     // print out each letter
+        delay_milli(10);            // delay 10 ms
+    }
+}
+
+/*--------------------------------------------------------------
+ * Function:        egr
+ *
+ * Description:     This function sends the LCD cursor to the
+ *                  beginning of line 3 and then prints out the
+ *                  egr string.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void egr(void) {
+    int i;
+    char egr[3];
+    strcpy(egr, "EGR");         // set egr string
+
+    commandWrite(0x96);         // send cursor to third line
+    delay_micro(10);            // delay 10 ms
+
+    for (i = 0; i < 3; i++) {
+        dataWrite(egr[i]);      // print out each letter
+        delay_milli(10);        // delay 10 ms
+    }
+}
+
+/*--------------------------------------------------------------
+ * Function:        num
+ *
+ * Description:     This function sends the LCD cursor to the
+ *                  beginning of line 4 and then prints out the
+ *                  num string.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void num(void) {
+    int i;
+    char num[3];
+    strcpy(num, "226");         // set num string
+
+    commandWrite(0xD6);         // send cursor to fourth line
+    delay_micro(10);            // delay 10 ms
+
+    for (i = 0; i < 3; i++) {
+        dataWrite(num[i]);      // print out each letter
+        delay_milli(10);        // delay 10 ms
+    }
+}
+
+/*--------------------------------------------------------------
  * Function:        SysTick_Init
  * Description:     This function initializes the SysTick
  *                  component of the code.
@@ -321,104 +421,4 @@ void commandWrite(uint8_t command) {
 void dataWrite(uint8_t data) {
     P3->OUT |= BIT0;    // turn RS pin to data (1)
     pushByte(data);     // calls pushByte function
-}
-
-/*--------------------------------------------------------------
- * Function:        firstname
- *
- * Description:     This function sends the LCD cursor to the
- *                  beginning of line 1 and then prints out the
- *                  first name string.
- *
- * Inputs:          none
- *
- * Outputs:         none
- *-------------------------------------------------------------*/
-void firstname(void) {
-    int i;
-    char firstname[6];
-    strcpy(firstname, "Rachel");    // set first name string
-
-    commandWrite(0x85);             // send cursor to first line
-    delay_milli(10);                // delay 10 ms
-
-    for (i = 0; i < 6; i++) {
-        dataWrite(firstname[i]);    // print out each letter
-        delay_milli(10);            // delay 10 ms
-    }
-}
-
-/*--------------------------------------------------------------
- * Function:        lastname
- *
- * Description:     This function sends the LCD cursor to the
- *                  beginning of line 2 and then prints out the
- *                  last name string.
- *
- * Inputs:          none
- *
- * Outputs:         none
- *-------------------------------------------------------------*/
-void lastname(void) {
-    int i;
-    char lastname[7];
-    strcpy(lastname, "Jacquay");    // set last name string
-
-    commandWrite(0xC4);             // send cursor to second line
-    delay_micro(10);                // delay 10 ms
-
-    for (i = 0; i < 7; i++) {
-        dataWrite(lastname[i]);     // print out each letter
-        delay_milli(10);            // delay 10 ms
-    }
-}
-
-/*--------------------------------------------------------------
- * Function:        egr
- *
- * Description:     This function sends the LCD cursor to the
- *                  beginning of line 3 and then prints out the
- *                  egr string.
- *
- * Inputs:          none
- *
- * Outputs:         none
- *-------------------------------------------------------------*/
-void egr(void) {
-    int i;
-    char egr[3];
-    strcpy(egr, "EGR");         // set egr string
-
-    commandWrite(0x96);         // send cursor to third line
-    delay_micro(10);            // delay 10 ms
-
-    for (i = 0; i < 3; i++) {
-        dataWrite(egr[i]);      // print out each letter
-        delay_milli(10);        // delay 10 ms
-    }
-}
-
-/*--------------------------------------------------------------
- * Function:        num
- *
- * Description:     This function sends the LCD cursor to the
- *                  beginning of line 4 and then prints out the
- *                  num string.
- *
- * Inputs:          none
- *
- * Outputs:         none
- *-------------------------------------------------------------*/
-void num(void) {
-    int i;
-    char num[3];
-    strcpy(num, "226");         // set num string
-
-    commandWrite(0xD6);         // send cursor to fourth line
-    delay_micro(10);            // delay 10 ms
-
-    for (i = 0; i < 3; i++) {
-        dataWrite(num[i]);      // print out each letter
-        delay_milli(10);        // delay 10 ms
-    }
 }
