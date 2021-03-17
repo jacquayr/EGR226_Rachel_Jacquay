@@ -1,0 +1,68 @@
+/*-----------------------------------------------------------------------------------------
+ * Author:          Rachel Jacquay
+ * Course:          EGR 226-902
+ * Date:            03/17/2021
+ * Project:         Lab 8 Part 3
+ * File:            main_part3.c
+ * Description:     This program
+-----------------------------------------------------------------------------------------*/
+
+#include "msp.h"
+#include <stdio.h>
+
+void SysTick_Init(void);
+void SysTick_Delay(uint8_t delay);
+
+void keypad_init (void);
+uint8_t Read_Keypad(void);
+void cycles(int num);
+void column_init(void);
+void pin_init(void);
+
+volatile int DC = 500;
+volatile int period = 7500-1;
+
+void main(void)
+{
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
+    pin_init();
+    SysTick_Init();
+    keypad_init();
+
+    int value;
+
+    printf("Please enter a key: \n");
+
+    while(1) {
+        value = Read_Keypad();
+
+        if (value != 13) {
+            cycles(10);
+        }
+        SysTick_Delay(10);
+    }
+}
+
+void pin_init(void) {
+    P2->SEL0 |= BIT4;
+    P2->SEL1 &= ~BIT4;
+    P2->DIR |= BIT4;
+
+    TIMER_A0->CCR[0] |= period;
+    TIMER_A0->CCTL[1] |= TIMER_A_CCTLN_OUTMOD_7;
+    TIMER_A0->CCR[1] = DC;
+    TIMER_A0->CTL |= 0x0214;
+}
+
+void SysTick_Init(void) {
+    SysTick->CTRL = 0;              // disable during step
+    SysTick->LOAD = 0x00FFFFFF;     // max reload value
+    SysTick->VAL = 0;               // any write to current value clears it
+    SysTick->CTRL = 0x00000005;     // enable SysTick (3 MHz) - no interrupts
+}
+
+void SysTick_Delay(uint8_t delay) {
+    SysTick->LOAD = ((3000 * DC) - 1);              // delay for 1 millisecond per delay value
+    SysTick->VAL = 0;                               // any write to current value clears it
+    while ((SysTick->CTRL & 0x00010000) == 0);      // wait for flag to be set
+}

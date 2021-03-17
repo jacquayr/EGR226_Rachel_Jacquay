@@ -1,0 +1,109 @@
+#include "msp.h"
+#include <stdio.h>
+
+void pin_init(void);
+void SysTick_Init(void);
+void SysTick_Delay(float DC);
+void DCtimer(float DC);
+
+void main(void)
+{
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
+
+    SysTick_Init();
+    pin_init();
+
+    float DC = 0.9;
+
+    while (1) {
+        DCtimer(DC);
+    }
+}
+
+/*--------------------------------------------------------------
+ * Function:        pin_init
+ * Description:     This function initializes the pins on the
+ *                  MSP432 that are connected to the LCD.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void pin_init(void) {
+    P3->SEL0 &= ~BIT6;
+    P3->SEL1 &= ~BIT6;
+    P3->DIR |= BIT6;
+    P3->OUT &= ~BIT6;
+}
+
+/*--------------------------------------------------------------
+ * Function:        systick_init
+ * Description:     This function initializes the SysTick
+ *                  component of the code.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void SysTick_Init(void) {
+    SysTick->CTRL = 0;              // disable during step
+    SysTick->LOAD = 0x00FFFFFF;     // max reload value
+    SysTick->VAL = 0;               // any write to current value clears it
+    SysTick->CTRL = 0x00000005;     // enable SysTick (3 MHz) - no interrupts
+}
+
+/*--------------------------------------------------------------
+ * Function:        systick_delay
+ *
+ * Description:     This function is used in the code as a
+ *                  delay in milliseconds to allow the MSP432
+ *                  and LCD to connect correctly.
+ *
+ * Inputs:          (unsigned 32 bit integer) delay: this
+ *                  variable takes in a number from the user
+ *                  and converts it to a delay in milliseconds
+ *                  that is used in the program
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void SysTick_Delay(float DC) {
+    float change;
+
+    DC = change;
+
+    SysTick->LOAD = ((3000 * DC) - 1);              // delay for 1 millisecond per delay value
+    SysTick->VAL = 0;                               // any write to current value clears it
+    while ((SysTick->CTRL & 0x00010000) == 0);      // wait for flag to be set
+}
+
+/*--------------------------------------------------------------
+ * Function:
+ *
+ * Description:
+ *
+ * Inputs:
+ *
+ * Outputs:
+ *-------------------------------------------------------------*/
+void DCtimer(float DC) {
+    int period = 33;
+    float T_on = period * DC;
+    float T_off = (period - (period * DC));
+
+    if (DC > 0 && DC < 1) {
+        P3->OUT |= BIT6;
+        systick_delay(T_on);
+        P3->OUT &= ~BIT6;
+        systick_delay(T_off);
+    }
+
+    if (DC == 1) {
+        P3->OUT |= BIT6;
+        systick_delay(T_on);
+    }
+
+    if (DC == 0) {
+        P3->OUT &= ~BIT6;
+        systick_delay(T_off);
+    }
+}

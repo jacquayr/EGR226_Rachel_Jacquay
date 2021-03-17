@@ -1,0 +1,21 @@
+/*-----------------------------------------------------------------------------------------
+ * Author:          Rachel Jacquay
+ * Course:          EGR 226-902
+ * Date:            03/17/2021
+ * Project:         Lab 8 Part 3
+ * File:            main_part3.c
+ * Description:     This program
+-----------------------------------------------------------------------------------------*/
+
+#include "msp.h"
+#include <stdio.h>
+
+void main(void)
+{
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
+
+
+    while(1) {
+
+    }
+}

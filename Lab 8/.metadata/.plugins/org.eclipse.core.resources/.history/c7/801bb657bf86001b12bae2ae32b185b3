@@ -1,0 +1,22 @@
+#include "msp.h"
+
+void PWM_init(void);
+
+volatile int period;
+volatile int duty_cycle;
+
+void main(void)
+{
+	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
+	PWM_init();
+}
+
+void PWM_init(void) {
+    P2->SEL0 |= BIT4;
+    P2->SEL1 &= ~BIT4;
+    P2->DIR |= BIT4;
+    TIMER_A0->CCR[0] |= 7500;
+    TIMER_A0->CCTL[1] |= OUTMOD_7;
+    TIMER_A0->CCR[1] |= 500;
+    TIMER_A0->CTL |= 0x0214;
+}

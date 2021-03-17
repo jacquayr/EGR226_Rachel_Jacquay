@@ -1,0 +1,71 @@
+#include "msp.h"
+
+#define DC 0.25
+
+void pin_init(void);
+void systick_init(void);
+void systick_delay(void);
+void DCtimer(void);
+
+void main(void)
+{
+	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
+
+	systick_init();
+	pin_init();
+
+	float DC =
+
+	while (1) {
+	    DCtimer(DC);
+	}
+}
+
+/*--------------------------------------------------------------
+ * Function:        pin_init
+ * Description:     This function initializes the pins on the
+ *                  MSP432 that are connected to the LCD.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void pin_init(void) {
+
+}
+
+/*--------------------------------------------------------------
+ * Function:        systick_init
+ * Description:     This function initializes the SysTick
+ *                  component of the code.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void systick_init(void) {
+    SysTick->CTRL = 0;              // disable during step
+    SysTick->LOAD = 0x00FFFFFF;     // max reload value
+    SysTick->VAL = 0;               // any write to current value clears it
+    SysTick->CTRL = 0x00000005;     // enable SysTick (3 MHz) - no interrupts
+}
+
+/*--------------------------------------------------------------
+ * Function:        systick_delay
+ *
+ * Description:     This function is used in the code as a
+ *                  delay in milliseconds to allow the MSP432
+ *                  and LCD to connect correctly.
+ *
+ * Inputs:          (unsigned 32 bit integer) delay: this
+ *                  variable takes in a number from the user
+ *                  and converts it to a delay in milliseconds
+ *                  that is used in the program
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void systick_delay(uint32_t delay) {
+    SysTick->LOAD = ((delay * 3000) - 1);           // delay for 1 millisecond per delay value
+    SysTick->VAL = 0;                               // any write to current value clears it
+    while ((SysTick->CTRL & 0x00010000) == 0);      // wait for flag to be set
+}
