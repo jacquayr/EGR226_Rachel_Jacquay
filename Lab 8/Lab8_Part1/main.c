@@ -12,9 +12,9 @@
 
 void pin_init(void);
 void SysTick_Init(void);
-void SysTick_Delay(float DC);
+void SysTick_Delay(uint8_t delay);
 
-int DC = 1000;
+volatile float DC;
 
 void main(void)
 {
@@ -23,9 +23,19 @@ void main(void)
     SysTick_Init();
     pin_init();
 
+    float Ton, Toff, period;
+
+    period = 100;
+
     while (1) {
-        SysTick_Delay();
-        P3->OUT ^= BIT0;
+        Ton = (DC / 100.0) * period;
+        Toff = period - Ton;
+
+        P3->OUT |= BIT0;
+        SysTick_Delay(Ton);
+
+        P3->OUT &= ~BIT0;
+        SysTick_Delay(Toff);
     }
 }
 
@@ -39,9 +49,10 @@ void main(void)
  * Outputs:         none
  *-------------------------------------------------------------*/
 void pin_init(void) {
-    P3->SEL0 &= ~BIT6;
-    P3->SEL1 &= ~BIT6;
-    P3->DIR |= BIT6;
+    P3->SEL0 &= ~BIT0;
+    P3->SEL1 &= ~BIT0;
+    P3->DIR |= BIT0;
+    P3->OUT &= ~BIT0;
 }
 
 /*--------------------------------------------------------------
@@ -67,15 +78,12 @@ void SysTick_Init(void) {
  *                  delay in milliseconds to allow the MSP432
  *                  and LCD to connect correctly.
  *
- * Inputs:          (unsigned 32 bit integer) delay: this
- *                  variable takes in a number from the user
- *                  and converts it to a delay in milliseconds
- *                  that is used in the program
+ * Inputs:
  *
  * Outputs:         none
  *-------------------------------------------------------------*/
-void SysTick_Delay(void) {
-    SysTick->LOAD = ((3000 * DC) - 1);              // delay for 1 millisecond per delay value
+void SysTick_Delay(uint8_t delay) {
+    SysTick->LOAD = ((3000 * delay) - 1);              // delay for 1 millisecond per delay value
     SysTick->VAL = 0;                               // any write to current value clears it
     while ((SysTick->CTRL & 0x00010000) == 0);      // wait for flag to be set
 }

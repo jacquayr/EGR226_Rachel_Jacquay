@@ -8,16 +8,17 @@
 -----------------------------------------------------------------------------------------*/
 
 #include "msp.h"
-#include <stdio.h>
 
 void PWM_init(void);
+
+volatile int input;
 
 void main(void)
 {
 	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
 	PWM_init();
 
-	int DC = 5000;
+	int DC = input;
 
 	while(1) {
 	    TIMER_A0->CCR[1] = DC;
@@ -28,8 +29,9 @@ void PWM_init(void) {
     P2->SEL0 |= BIT4;
     P2->SEL1 &= ~BIT4;
     P2->DIR |= BIT4;
+    P2->OUT &= ~BIT4;
 
-    TIMER_A0->CCR[0] |= 7500 - 1;
+    TIMER_A0->CCR[0] |= 30000;
     TIMER_A0->CCTL[1] |= TIMER_A_CCTLN_OUTMOD_7;
     TIMER_A0->CCR[1] |= 500;
     TIMER_A0->CTL |= 0x0214;

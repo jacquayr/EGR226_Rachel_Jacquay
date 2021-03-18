@@ -19,7 +19,7 @@ void Print_Keys(void);
 void pin_init(void);
 
 volatile int DC = 0;
-volatile int period = 7500-1;
+volatile int period = 30000;
 
 uint8_t num, pressed;
 
@@ -30,8 +30,6 @@ void main(void)
     SysTick_Init();
     keypad_init();
 
-    int value;
-
     printf("Please enter a key: \n");
 
     while(1) {
@@ -40,6 +38,10 @@ void main(void)
         if (pressed) {
             Print_Keys();
             SysTick_Delay(1);
+
+            if (num == 11) {
+                DC = 0;
+            }
         }
 
         else if (num <= 9) {
