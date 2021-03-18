@@ -17,6 +17,7 @@
 // function prototypes
 void SysTick_Init(void);
 void SysTick_Delay(uint8_t delay);
+void keypad_init(void);
 uint8_t Read_Keypad(void);
 void Print_Keys(void);
 void pin_init(void);
@@ -31,6 +32,7 @@ void main(void)
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
     pin_init();                                     // initializations
     SysTick_Init();
+    keypad_init();
 
     printf("Please enter a key: \n");       // tell user to press a key
 
