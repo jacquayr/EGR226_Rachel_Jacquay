@@ -1,0 +1,20 @@
+/*-----------------------------------------------------------------------------------------
+ * Author:          Rachel Jacquay
+ * Course:          EGR 226-902
+ * Date:            03/24/2021
+ * Project:         Lab 9 Part 2
+ * File:            main_part2.c
+ * Description:
+-----------------------------------------------------------------------------------------*/
+
+// libraries
+#include "msp.h"
+#include <stdio.h>
+
+// function prototypes
+void pin_init(void);
+
+void main(void)
+{
+	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
+}

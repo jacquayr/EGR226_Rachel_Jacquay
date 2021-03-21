@@ -1,0 +1,164 @@
+/*-----------------------------------------------------------------------------------------
+ * Author:          Rachel Jacquay
+ * Course:          EGR 226-902
+ * Date:            03/24/2021
+ * Project:         Lab 9 Part 2
+ * File:            main_part2.c
+ * Description:
+-----------------------------------------------------------------------------------------*/
+
+// libraries
+#include "msp.h"
+#include <stdio.h>
+
+// function prototypes
+void pin_init(void);
+void SysTick_Init(void);
+void SysTick_Delay(void);
+void changeCount(void);
+
+volatile uint8_t count = 0;
+
+void main(void)
+{
+    __disable_irq();
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
+    SysTick_Init();
+    pin_init();
+
+    //NVIC_EnableIRQ(SysTick_IRQn);     // NVIC call
+    __enable_irq();
+
+    while (1) {
+
+    }
+}
+
+/*--------------------------------------------------------------
+ * Function:        SysTick_Init
+ *
+ * Description:     Initialize the SysTick delay component.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void SysTick_Init(void) {
+    SysTick->CTRL = 0;              // disable SysTick during step
+    SysTick->LOAD = 0x00FFFFFF;     // max reload value
+    SysTick->VAL = 0;               // any write to current value clears it
+    SysTick->CTRL = 0x00000007;     // enable SysTick (3 MHz) -> YES TO INTERRUPTS
+}
+
+
+/*--------------------------------------------------------------
+ * Function:        SysTick_Delay
+ *
+ * Description:     Add a delay to make sure the button is
+ *                  being pressed and not just bouncing.
+ *
+ * Inputs:          (unsigned 16-bit int) delay: integer to set the
+ *                  length of the timer delay
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void SysTick_Delay(void) {
+    SysTick->LOAD = 3000000;           // delay for 1 millisecond per delay value
+    SysTick->VAL = 0;                               // any write to current value clears it
+    while ((SysTick->CTRL & 0x00010000) == 0);      // wait for flag to be set
+}
+
+/*--------------------------------------------------------------
+ * Function:        pin_init
+ *
+ * Description:
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void pin_init(void) {
+    P4->SEL0 &= ~0x7F;      // set as simple I/O
+    P4->SEL1 &= ~0x7F;
+    P4->DIR |= 0x7F;        // set to output
+    P4->OUT &= ~0x7F;       // set to low
+}
+
+/*--------------------------------------------------------------
+ * Function:        changeCount
+ *
+ * Description:
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void changeCount(void) {
+    switch (count) {
+    case '0' :
+        P4->OUT |= 0x3F;
+        P4->OUT &= 0x3F;
+        break;
+
+    case '1' :
+        P4->OUT |= 0x06;
+        P4->OUT &= 0x06;
+        break;
+
+    case '2' :
+        P4->OUT |= 0x5B;
+        P4->OUT &= 0x5B;
+        break;
+
+    case '3' :
+        P4->OUT |= 0x4F;
+        P4->OUT &= 0x4F;
+        break;
+
+    case '4' :
+        P4->OUT |= 0x66;
+        P4->OUT &= 0x66;
+        break;
+
+    case '5' :
+        P4->OUT |= 0x6D;
+        P4->OUT &= 0x6D;
+        break;
+
+    case '6' :
+        P4->OUT |= 0x7D;
+        P4->OUT &= 0x7D;
+        break;
+
+    case '7' :
+        P4->OUT |= 0x07;
+        P4->OUT &= 0x07;
+        break;
+
+    case '8' :
+        P4->OUT |= 0x7F;
+        P4->OUT &= 0x7F;
+        break;
+
+    case '9' :
+        P4->OUT |= 0x6F;
+        P4->OUT &= 0x6F;
+        break;
+
+    default :
+        P4->OUT &= ~0x7F;
+    }
+}
+
+/*--------------------------------------------------------------
+ * Function:        SysTick_Handler
+ *
+ * Description:
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void SysTick_Handler(void) {
+    count++;
+}

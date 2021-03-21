@@ -1,0 +1,15 @@
+/*
+ * LCD.h
+ *
+ *  Created on: Mar 21, 2021
+ *      Author: Rachel Jacquay
+ */
+
+#ifndef LCD_H_
+#define LCD_H_
+
+#include "msp.h"
+
+
+
+#endif /* LCD_H_ */

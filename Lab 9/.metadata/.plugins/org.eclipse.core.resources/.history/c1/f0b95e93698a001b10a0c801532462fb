@@ -1,0 +1,167 @@
+/*-----------------------------------------------------------------------------------------
+ * Author:          Rachel Jacquay
+ * Course:          EGR 226-902
+ * Date:            03/24/2021
+ * Project:         Lab 9 Part 1
+ * File:            main_part1.c
+ * Description:     This program used Timer A, an Octocoupler, and a resistor to
+ *                  create a pseudo PWM analog voltage for the DC motor. GPIO interrupts
+ *                  are used for the push buttons.
+-----------------------------------------------------------------------------------------*/
+
+// libraries
+#include "msp.h"
+#include <stdio.h>
+
+// function prototypes
+void pin_init(void);
+void SysTick_Init(void);
+void SysTick_Delay(uint16_t delay);
+void debounce(void);
+void PORT6_IRQHandler(void)
+
+volatile uint16_t DC = 0;    // volatile variables
+volatile uint8_t flag = 0;
+
+void main(void)
+{
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
+    pin_init();                                     // initializations
+    SysTick_Init();
+
+    __enable_irq();     // enable interrupt request
+
+    // red = P6.6 --> stop
+    // white = P6.7 --> inc 10%
+    // black = P6.1 --> dec 10%
+
+    while (1) {     // always
+        debounce();
+
+        while (flag == 1) {
+            if ((P6->IN & BIT6) != BIT6) {
+                DC = 0;
+                TIMER_A0->CCR[1] = DC;              // set the duty cycle and send to CCR1 on Timer A
+                SysTick_Delay(1);                   // call Systick delay function
+            }
+
+            else if ((P6->IN & BIT7) != BIT7) {
+                if (DC >= 30000) {
+                    DC = 30000;
+                }
+
+                else {
+                    DC += 3000;
+                }
+
+                TIMER_A0->CCR[1] = DC;              // set the duty cycle and send to CCR1 on Timer A
+                SysTick_Delay(1);                    // call Systick delay function
+            }
+
+            else if ((P6->IN & BIT1) != BIT1) {
+                if (DC <= 0) {
+                    DC = 0;
+                }
+
+                else {
+                    DC -= 3000;
+                }
+
+                TIMER_A0->CCR[1] = DC;              // set the duty cycle and send to CCR1 on Timer A
+                SysTick_Delay(1);                    // call Systick delay function
+            }
+            flag = 0;
+        }
+    }
+}
+
+/*--------------------------------------------------------------
+ * Function:        pin_init
+ *
+ * Description:     This function initializes the pins on the
+ *                  MSP432 that are connected to the DC motor.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void pin_init(void) {
+    P2->SEL0 |= BIT4;       // configure P2.4 for PWM
+    P2->SEL1 &= ~BIT4;
+    P2->DIR |= BIT4;        // set as output
+    P2->OUT &= ~BIT4;       // set as low
+
+    TIMER_A0->CCR[0] |= 30000;                      // set period amount
+    TIMER_A0->CCTL[1] |= TIMER_A_CCTLN_OUTMOD_7;    // set to mode 7
+    TIMER_A0->CCR[1] |= 500;                        // set duty cycle amount
+    TIMER_A0->CTL |= 0x0214;                        // set to SMCLK, up mode, clear TAR to start
+
+    // red = P6.6
+    // white = P6.7
+    // black = P6.1
+
+    P6->SEL0 &= ~0xC2;      // set as simple I/O
+    P6->SEL1 &= ~0xC2;
+    P6->DIR &= ~0xC2;       // set as input
+    P6->REN |= 0xC2;        // enable resistor
+    P6->OUT |= 0xC2;        // enable pull up
+    P6->IE |= 0xC2;         // set pin interrupt to trigger when it goes from high -> low
+    P6->IES |= 0xC2;        // enable interrupt for P6.1, P6.6, P6.7
+    P6->IFG = 0;            // set flag to 0
+}
+
+/*--------------------------------------------------------------
+ * Function:        SysTick_Init
+ *
+ * Description:     Initialize the SysTick delay component.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void SysTick_Init(void) {
+    SysTick->CTRL = 0;              // disable SysTick during step
+    SysTick->LOAD = 0x00FFFFFF;     // max reload value
+    SysTick->VAL = 0;               // any write to current value clears it
+    SysTick->CTRL = 0x00000005;     // enable SysTick (3 MHz) -> no interrupts
+}
+
+/*--------------------------------------------------------------
+ * Function:        SysTick_Delay
+ *
+ * Description:     Add a delay to make sure the button is
+ *                  being pressed and not just bouncing.
+ *
+ * Inputs:          (unsigned 16-bit int) delay: integer to set the
+ *                  length of the timer delay
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void SysTick_Delay(uint16_t delay) {
+    SysTick->LOAD = ((delay * 3000) - 1);           // delay for 1 millisecond per delay value
+    SysTick->VAL = 0;                               // any write to current value clears it
+    while ((SysTick->CTRL & 0x00010000) == 0);      // wait for flag to be set
+}
+
+/*--------------------------------------------------------------
+ * Function:        debounce
+ *
+ * Description:
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void debounce(void) {
+    if (((P6->IN & BIT6) != BIT6) || ((P6->IN & BIT7) != BIT7) || ((P6->IN & BIT1) != BIT1)) {
+        SysTick_Delay(100);
+
+        if (((P6->IN & BIT6) != BIT6) || ((P6->IN & BIT7) != BIT7) || ((P6->IN & BIT1) != BIT1)) {
+            flag = 1;
+        }
+    }
+}
+
+void PORT6_IRQHandler(void) {
+
+}

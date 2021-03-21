@@ -1,0 +1,21 @@
+/*-----------------------------------------------------------------------------------------
+ * Author:          Rachel Jacquay
+ * Course:          EGR 226-902
+ * Date:            03/24/2021
+ * Project:         Lab 9 Part 1
+ * File:            main_part1.c
+ * Description:     This program used Timer A, an Optocoupler, and a resistor to
+ *                  create a pseudo PWM analog voltage for the DC motor. GPIO interrupts
+ *                  are used for the push buttons.
+-----------------------------------------------------------------------------------------*/
+
+#include "msp.h"
+
+
+/**
+ * main.c
+ */
+void main(void)
+{
+	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
+}
