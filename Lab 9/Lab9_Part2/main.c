@@ -4,7 +4,9 @@
  * Date:            03/24/2021
  * Project:         Lab 9 Part 2
  * File:            main_part2.c
- * Description:
+ * Description:     This program used the 7-segment display, two resistors, a bunch of
+ *                  wires, and SysTick, to interface the numbers 0 through 9 on the display.
+ *                  SysTick interrupts were used.
 -----------------------------------------------------------------------------------------*/
 
 // libraries

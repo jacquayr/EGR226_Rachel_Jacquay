@@ -4,9 +4,9 @@
  * Date:            03/24/2021
  * Project:         Lab 9 Part 1
  * File:            main_part1.c
- * Description:     This program used Timer A, an Optocoupler, and a resistor to
- *                  create a pseudo PWM analog voltage for the DC motor. GPIO interrupts
- *                  are used for the push buttons.
+ * Description:     This program used Timer A, an Optocoupler, a resistor, three push
+ *                  buttons, SysTick, and wires to create a pseudo PWM analog voltage for
+ *                  the DC motor. GPIO interrupts were used for the push buttons.
 -----------------------------------------------------------------------------------------*/
 
 // libraries

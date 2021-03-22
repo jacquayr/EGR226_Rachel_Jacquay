@@ -1,0 +1,32 @@
+/*-----------------------------------------------------------------------------------------
+ * Author:          Rachel Jacquay
+ * Course:          EGR 226-902
+ * Date:            03/24/2021
+ * Project:         Lab 9 Part 3
+ * File:            main_part3.c
+ * Description:
+-----------------------------------------------------------------------------------------*/
+
+#include "msp.h"
+#include <stdio.h>
+
+void SysTick_Init(void);
+void SysTick_Delay(void);
+void pin_init(void);
+void debounce(void);
+void PORT6_IRQHandler(void);
+void changeCase(void);
+
+volatile uint32_t count = 0;    // volatile global variables
+volatile uint8_t flag = 0;
+
+void main(void)
+{
+    __disable_irq();                                // disable interrupts during initializations
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
+    pin_init();                                     // initializations
+    SysTick_Init();
+
+    NVIC_EnableIRQ(PORT6_IRQn);     // NVIC call
+    __enable_irq();                 // enable interrupt request
+}
