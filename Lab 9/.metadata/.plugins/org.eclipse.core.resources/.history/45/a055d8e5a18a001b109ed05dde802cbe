@@ -52,16 +52,15 @@ void SysTick_Init(void) {
     SysTick->CTRL = 0;              // disable SysTick during step
     SysTick->LOAD = 0x00FFFFFF;     // max reload value
     SysTick->VAL = 0;               // any write to current value clears it
-    SysTick->CTRL = 0x00000007;     // enable SysTick (3 MHz) -> YES INTERRUPTS
+    SysTick->CTRL = 0x00000007;     // enable SysTick (3 MHz) -> YES TO INTERRUPTS
 }
 
 
 /*--------------------------------------------------------------
  * Function:        SysTick_Delay
  *
- * Description:     This function takes in the variable 'delay'
- *                  from the function that called it, and turns
- *                  it into a millisecond delay.
+ * Description:     Add a delay to make sure the button is
+ *                  being pressed and not just bouncing.
  *
  * Inputs:          none
  *

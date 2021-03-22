@@ -240,7 +240,7 @@ void PORT6_IRQHandler(void) {
                     count = 9;                      // set count to 0
                 }
 
-                changeCase();                       // call change case function
+                changeCase();                       // set the duty cycle and send to CCR1 on Timer A
             }
             flag = 0;                               // reset flag to 0
         }

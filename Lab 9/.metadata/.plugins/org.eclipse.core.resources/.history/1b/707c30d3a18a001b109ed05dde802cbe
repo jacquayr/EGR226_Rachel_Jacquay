@@ -42,8 +42,7 @@ void main(void)
  * Function:        pin_init
  *
  * Description:     This function initializes the pins on the
- *                  MSP432 that are connected to the DC motor
- *                  and the ones used for PWM.
+ *                  MSP432 that are connected to the DC motor.
  *
  * Inputs:          none
  *
@@ -93,9 +92,8 @@ void SysTick_Init(void) {
 /*--------------------------------------------------------------
  * Function:        SysTick_Delay
  *
- * Description:     This function takes in the variable 'delay'
- *                  from the function that called it, and turns
- *                  it into a millisecond delay.
+ * Description:     Add a delay to make sure the button is
+ *                  being pressed and not just bouncing.
  *
  * Inputs:          (unsigned 16-bit int) delay: integer to set the
  *                  length of the timer delay

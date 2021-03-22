@@ -61,9 +61,8 @@ void SysTick_Init(void) {
 /*--------------------------------------------------------------
  * Function:        SysTick_Delay
  *
- * Description:     This function takes in the variable 'delay'
- *                  from the function that called it, and turns
- *                  it into a millisecond delay.
+ * Description:     Add a delay to make sure the button is
+ *                  being pressed and not just bouncing.
  *
  * Inputs:          none
  *
@@ -226,7 +225,7 @@ void PORT6_IRQHandler(void) {
             else if ((P6->IN & BIT7) != BIT7) {     // if white button is pressed
                 count++;                            // increment count first
 
-                if (count > 9) {                    // if count is above 9
+                if (count > 9) {                    // if count is at or above 9
                     count = 0;                      // set count to 0
                 }
 
@@ -236,11 +235,11 @@ void PORT6_IRQHandler(void) {
             else if ((P6->IN & BIT1) != BIT1) {     // if black button is pressed
                 count--;                            // decrement count
 
-                if (count < 0) {                    // if count is below 0
-                    count = 9;                      // set count to 0
+                if (count < 0) {                    // if duty cycle is at or below 0
+                    count = 9;                      // keep duty cycle at 0
                 }
 
-                changeCase();                       // call change case function
+                changeCase();                       // set the duty cycle and send to CCR1 on Timer A
             }
             flag = 0;                               // reset flag to 0
         }
