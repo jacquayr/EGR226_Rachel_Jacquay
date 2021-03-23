@@ -35,9 +35,6 @@ void main(void)
     NVIC_EnableIRQ(PORT6_IRQn);     // NVIC call
     __enable_irq();                 // enable interrupt request
 
-    P4->OUT &= ~0x7F;   // turn all off
-    P4->OUT |= 0x3F;    // turn on certain bits
-
     while (1) {
 
     }
@@ -175,8 +172,7 @@ void changeCase(void) {
         break;              // break
 
     default :               // default case
-        P4->OUT &= ~0x7F;   // turn all off
-        P4->OUT |= 0x3F;    // turn on certain bits
+        P4->OUT &= ~0x7F;   // turn all bits off
         count = 0;          // reset count to 0
     }
 }
