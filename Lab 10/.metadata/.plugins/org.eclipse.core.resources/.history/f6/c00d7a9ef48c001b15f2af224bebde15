@@ -1,0 +1,24 @@
+#include "msp.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+void ADCsetup(void);
+
+void main(void)
+{
+	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
+}
+
+void ADCsetup(void) {
+    ADC14->CTL0 = 0x00000010;       // power on & disabled during config
+    ADC14->CTL0 |= 0x04D80300;      // S/H pulse mode, MCLK, 32 sample clocks, SW trigger, /4 clock divide
+
+    ADC14->CTL1 = 0x00000030;       // 14-bit resolution
+    ADC14->MCTL[5] = 0;             // A0 input, single ended, vref = avcc
+
+    P3->SEL1 |= BIT0;               // configure P3.0 for AO
+    P3->SEL0 |= BIT0;
+
+    ADC14->CTL1 |= 0x00050000;
+    ADC14->CTL0 |= 2;
+}

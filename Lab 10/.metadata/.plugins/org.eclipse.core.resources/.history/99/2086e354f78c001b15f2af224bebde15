@@ -1,0 +1,37 @@
+#include "msp.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include "SysTick.h"
+
+void ADCsetup(void);
+
+volatile uint16_t result;
+
+void main(void)
+{
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
+
+    while(1) {
+        ADC14->CTL0 |= 1;                               // start conversion
+
+        while(!ADC14->IFGR0) {                          // wait until conversion is complete
+            result = ADC14->MEM[5];                     // immediately store value in variable
+            printf("Value is: \n\t %d\n", result);      // print value
+            SysTick_Delay(500);                         // delay 500 ms
+        }
+    }
+}
+
+void ADCsetup(void) {
+    ADC14->CTL0 = 0x00000010;       // power on & disabled during config
+    ADC14->CTL0 |= 0x04D80300;      // S/H pulse mode, MCLK, 32 sample clocks, SW trigger, /4 clock divide
+
+    ADC14->CTL1 = 0x00000030;       // 14-bit resolution
+    ADC14->MCTL[5] = 0;             // A0 input, single ended, vref = avcc
+
+    P5->SEL1 |= BIT5;               // configure P2.7 for AO
+    P5->SEL0 |= BIT5;
+
+    ADC14->CTL1 |= 0x00050000;
+    ADC14->CTL0 |= 2;
+}

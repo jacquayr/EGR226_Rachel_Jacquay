@@ -61,7 +61,7 @@ void SysTick_Init(void) {
  *
  * Description:     This function takes in the variable 'delay'
  *                  from the function that called it, and turns
- *                  it into a millisecond delay.
+ *                  it into a second delay.
  *
  * Inputs:          none
  *

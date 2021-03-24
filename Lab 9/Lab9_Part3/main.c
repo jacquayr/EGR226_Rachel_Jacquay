@@ -214,9 +214,9 @@ void debounce(void) {
  * Outputs:         none
  *-------------------------------------------------------------*/
 void PORT6_IRQHandler(void) {
-    // red = P6.6 --> stop
-    // white = P6.7 --> inc 10%
-    // black = P6.1 --> dec 10%
+    // red = P6.6 --> reset to 0
+    // white = P6.7 --> increase
+    // black = P6.1 --> decrease
 
     if (P6->IFG & 0xC2) {       // if port 6 interrupts were changed and the flag was set
         debounce();             // call debounce function
