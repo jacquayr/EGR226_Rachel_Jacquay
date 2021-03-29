@@ -1,0 +1,23 @@
+/*
+ * SysTick.c
+ *
+ *  Created on: Mar 21, 2021
+ *      Author: Rachel Jacquay
+ */
+
+#include "SysTick.h"
+
+/*--------------------------------------------------------------
+ * Function:        SysTick_Init
+ * Description:     Initialize the SysTick delay component.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void SysTick_Init(void) {
+    SysTick->CTRL = 0;              // disable SysTick during step
+    SysTick->LOAD = 0x00FFFFFF;     // max reload value
+    SysTick->VAL = 0;               // any write to current value clears it
+    SysTick->CTRL = 0x00000005;     // enable SysTick (3 MHz) -> no interrupts
+}

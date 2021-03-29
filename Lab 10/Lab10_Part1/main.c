@@ -1,33 +1,56 @@
+/*-----------------------------------------------------------------------------------------
+ * Author:          Rachel Jacquay
+ * Course:          EGR 226-902
+ * Date:            04/04/2021
+ * Project:         Lab 10 Part 1
+ * File:            main_part1.c
+ * Description:
+-----------------------------------------------------------------------------------------*/
+
+// libraries
 #include "msp.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include "SysTick.h"
 
+// initialization
 void ADCsetup(void);
 
-volatile double value = 0;
-volatile double result = 0;
+// global vars
+double result = 0;
+double voltage = 0;
 
 void main(void)
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
-    SysTick_Init();
+    SysTick_Init();                                 // initializations
     ADCsetup();
 
     while(1) {
         ADC14->CTL0 |= 1;                               // start conversion
 
-        while(!ADC14->IFGR0);                          // wait until conversion is complete
-        value = ADC14->MEM[5];                     // immediately store value in variable
-        result = value * 0.0002;
+        while(!ADC14->IFGR0);                           // wait until conversion is complete
+        result = ADC14->MEM[5];                         // immediately store value in variable
+        voltage = result * 0.0002;
 
-        printf("ADC value is: \n\t %.0lf\n", value);      // print value
-        printf("Voltage is: \n\t %.2lf\n", result);
+        printf("ADC value is: \n\t %.0lf\n", result);       // print ADC value
+        printf("Voltage is: \n\t %.2lf\n", voltage);        // print voltage value
 
         SysTick_Delay(500);                         // delay 500 ms
     }
 }
 
+/*--------------------------------------------------------------
+ * Function:        ADCsetup
+ *
+ * Description:     This function sets up the pin 5.5 for ADC
+ *                  and also sets up the ADC in the MSP432 for
+ *                  use.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
 void ADCsetup(void) {
     ADC14->CTL0 = 0x00000010;       // power on & disabled during config
     ADC14->CTL0 |= 0x04D80300;      // S/H pulse mode, MCLK, 32 sample clocks, SW trigger, /4 clock divide
