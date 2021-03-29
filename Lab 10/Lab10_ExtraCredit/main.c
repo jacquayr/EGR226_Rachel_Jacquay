@@ -4,7 +4,9 @@
  * Date:            04/04/2021
  * Project:         Lab 10 Extra Credit
  * File:            main_EC.c
- * Description:
+ * Description:     This program is an extension of Part 3 of Lab 10, except a pushbutton
+ *                  was added into the circuit. A press changed the temperature being
+ *                  printed out from Celcius to Fahrenheit. GPIO interrupts were used.
 -----------------------------------------------------------------------------------------*/
 
 // libraries
@@ -21,6 +23,7 @@ void secondline(void);
 void debounce(void);
 void printCelc(void);
 void printFahr(void);
+void PORT6_IRQHandler(void);
 
 // globals
 double result = 0;
@@ -32,21 +35,21 @@ int i = 0;
 
 void main(void)
 {
-    __disable_irq();
+    __disable_irq();                                // disable irq
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
     SysTick_Init();                                 // initializations
     ADCsetup();
     Pin_Init();
     LCD_Init();
 
-    //NVIC_EnableIRQ(PORT6_IRQn);
-    __enable_irq();
+    NVIC_EnableIRQ(PORT6_IRQn);     // NVIC call
+    __enable_irq();                 // enable irq
 
     commandWrite(0x01);     // clear screen
     delay_milli(500);       // delay 500 ms
 
     commandWrite(0x0C);     // turn cursor off
-    delay_milli(100);       // delay 100 ms
+    delay_milli(10);        // delay 100 ms
 
     firstline();            // call first line function
     delay_micro(50);        // delay 50 us
@@ -61,16 +64,12 @@ void main(void)
         celc = (voltage - 0.5) / (0.01);        // find celcius value
         fahr = (celc * (9.0/5.0) + 32);         // find fahr value
 
-        debounce();             // call debounce function
-
-        if (flag == 0) {
-            printCelc();
-            delay_milli(10);
+        if (flag == 0) {            // if flag is 0 (default)
+            printCelc();            // print celc
         }
 
-        else if (flag == 1) {
-            printFahr();
-            delay_milli(10);
+        else if (flag == 1) {       // if flag is 1 (first push)
+            printFahr();            // print fahr
         }
 
         delay_milli(500);                       // delay 500 ms
@@ -113,14 +112,14 @@ void ADCsetup(void) {
  * Outputs:         none
  *-------------------------------------------------------------*/
 void debounce(void) {
-    if (((P6->IN & BIT4) != BIT4)) {          // if any switch is pressed
-        delay_milli(1);                      // delay for 10 ms
+    if ((P6->IN & BIT4) != BIT4) {          // if switch is pressed
+        delay_milli(10);                    // delay for 10 ms
 
-        if (((P6->IN & BIT4) != BIT4)) {      // check switch again
-            flag++;
+        if ((P6->IN & BIT4) != BIT4) {      // check switch again
+            flag++;                         // increment flag
 
-            if (flag == 2) {
-                flag = 0;
+            if (flag == 2) {    // if flag is 2
+                flag = 0;       // reset to 0
             }
         }
     }
@@ -215,39 +214,24 @@ void printFahr(void) {
     delay_milli(10);        // delay 10 ms
 }
 
-
 /*--------------------------------------------------------------
  * Function:        PORT6_IRQHandler
  *
  * Description:     This function deals with the GPIO interrupt
  *                  and calls the debounce function, then checks
- *                  if any of buttons are pressed, and acts
+ *                  if the button is pressed, and acts
  *                  accordingly.
  *
  * Inputs:          none
  *
  * Outputs:         none
  *-------------------------------------------------------------*/
-/*
 void PORT6_IRQHandler(void) {
     // button: P6.4
 
     if (P6->IFG & BIT4) {       // if port 6 interrupts were changed and the flag was set
         debounce();             // call debounce function
 
-        if (flag == 0) {
-            printCelc();
-            delay_milli(10);
-        }
-
-        else if (flag == 1) {
-            printFahr();
-            delay_milli(10);
-        }
-
-        delay_milli(500);                       // delay 500 ms
+        P6->IFG &= ~BIT4;       // reset interrupt flag
     }
-
-    P6->IFG &= ~0xC2;       // reset interrupt flag
 }
- */

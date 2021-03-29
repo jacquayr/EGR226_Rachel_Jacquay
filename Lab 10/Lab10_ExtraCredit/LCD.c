@@ -59,6 +59,9 @@ void Pin_Init(void) {
     P6->DIR &= ~BIT4;       // set as input
     P6->REN |= BIT4;        // enable resistor
     P6->OUT |= BIT4;        // enable pull up
+    P6->IE |= BIT4;         // set pin interrupt to trigger when it goes from high -> low
+    P6->IES |= BIT4;        // enable interrupt for P6.4
+    P6->IFG = 0;            // set flag to 0
 
     delay_milli(60);        // delay
 }

@@ -4,7 +4,10 @@
  * Date:            04/04/2021
  * Project:         Lab 10 Part 1
  * File:            main_part1.c
- * Description:
+ * Description:     This program uses a potentiometer and some wires to read in and print
+ *                  out the voltage value through the potentiometer onto the serial
+ *                  window of the CCS screen. The voltage and digital values are printed
+ *                  out to the screen.
 -----------------------------------------------------------------------------------------*/
 
 // libraries

@@ -4,7 +4,9 @@
  * Date:            04/04/2021
  * Project:         Lab 10 Part 2
  * File:            main_part2.c
- * Description:
+ * Description:     This program is an extension of Part 1 of Lab 10. Instead of the
+ *                  potentiometer, a temp sensor is used. Both Celcius and Fahrenheit
+ *                  are printed out instead of the voltage and digital values.
 -----------------------------------------------------------------------------------------*/
 
 // libraries

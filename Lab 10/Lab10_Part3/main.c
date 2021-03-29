@@ -4,7 +4,9 @@
  * Date:            04/04/2021
  * Project:         Lab 10 Part 3
  * File:            main_part3.c
- * Description:
+ * Description:     This program is an extension of Part 2 of Lab 10. It takes the temp
+ *                  from the temperature sensor, and prints it out in Celcius onto the
+ *                  LCD instead of the CCS window. The temp printed changes every 500ms.
 -----------------------------------------------------------------------------------------*/
 
 // libraries
