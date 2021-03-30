@@ -31,7 +31,6 @@ double voltage = 0;
 double celc = 0;
 double fahr = 0;
 int flag = 0;
-int i = 0;
 
 void main(void)
 {
@@ -138,13 +137,12 @@ void debounce(void) {
  *-------------------------------------------------------------*/
 void firstline(void) {
     int i;
-    char line1[15];
-    strcpy(line1, "Current temp is");   // copy temp to line1 var
+    char line1[16] = "Current Temp. is";    // set string
 
     commandWrite(0x80);                 // send cursor to first line
     delay_milli(100);                   // delay 100 ms
 
-    for (i = 0; i < 15; i++) {
+    for (i = 0; i < 16; i++) {
         dataWrite(line1[i]);            // write each character of the string
         delay_milli(10);                // delay 10 ms
     }
@@ -197,7 +195,7 @@ void printCelc(void) {
 void printFahr(void) {
     int i;
     char fahren[4];
-    sprintf(fahren, "%.2lf", fahr);   // copy celcius valur to temp string w/ 2 decmial places
+    sprintf(fahren, "%.2lf", fahr);   // copy fahren valur to temp string w/ 2 decmial places
 
     commandWrite(0xC5);             // send cursor to middle of second line
     delay_milli(10);                // delay 10 ms

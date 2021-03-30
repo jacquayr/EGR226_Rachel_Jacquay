@@ -97,13 +97,12 @@ void ADCsetup(void) {
  *-------------------------------------------------------------*/
 void firstline(void) {
     int i;
-    char line1[15];
-    strcpy(line1, "Current temp is");   // copy temp to line1 var
+    char line1[16] = "Current Temp. is";    // set string
 
     commandWrite(0x80);                 // send cursor to first line
     delay_milli(100);                   // delay 100 ms
 
-    for (i = 0; i < 15; i++) {
+    for (i = 0; i < 16; i++) {
         dataWrite(line1[i]);            // write each character of the string
         delay_milli(10);                // delay 10 ms
     }
