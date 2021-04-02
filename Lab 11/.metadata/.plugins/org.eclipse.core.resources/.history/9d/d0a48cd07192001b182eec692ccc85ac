@@ -1,0 +1,19 @@
+#include "msp.h"
+#include "stdio.h"
+
+void main(void)
+{
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
+
+    P2->SEL0 |= BIT5;        // TA0.CC12A input capture pin, second function
+    P2->SEL1 &= ~BIT5;       // TA0.CC12A input capture pin, second function
+    P2-DIR &= ~BIT5;
+
+    TIMER_A0->CTL |= 0x0214;        // SMCLK source, UP mode, clear TA0R
+    TIMER_A0_CCTL[2] |= 0x4910;     // capture rising edge, use CC12A, enable capture interrupt
+                                    // enable capture mode, synchronous capture
+
+    NVIC_EnableIRQ(PORT6_IRQn);     // NVIC call
+    __enable_irq();                 // enable irq
+
+}
