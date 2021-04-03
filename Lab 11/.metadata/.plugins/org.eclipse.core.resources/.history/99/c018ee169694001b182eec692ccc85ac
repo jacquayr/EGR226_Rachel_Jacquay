@@ -27,7 +27,7 @@ void main(void) {
     receive_init();
     LED_init();
 
-    NVIC_EnableIRQ(TA0_N_IRQn);     // NVIC call
+    NVIC_EnableIRQ(T32_INT2_IRQn);     // NVIC call
     __enable_irq();                    // enable irq
 
     while(1) {
