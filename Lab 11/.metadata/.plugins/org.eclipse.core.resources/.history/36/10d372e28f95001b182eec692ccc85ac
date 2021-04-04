@@ -133,5 +133,5 @@ void TA2_N_IRQHandler(void) {
         SysTick_Delay(33);                          // delay 33 ms
     }
 
-    TIMER_A0->CCTL[1] &= ~(TIMER_A_CCTLN_CCIFG);    // clear TA2.1 interrupt flag
+    TIMER_A0->CCTL[1] &= ~(TIMER_A_CCTLN_CCIFG);        // clear TA2.1 interrupt flag
 }
