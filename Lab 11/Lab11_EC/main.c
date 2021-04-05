@@ -43,6 +43,8 @@ void main(void) {
 
     while(1) {
         flag = 0;                   // set flag to 0
+        red = 0;
+        blue = 0;
         SysTick_Delay(333);         // delay 333 ms
 
         if (flag == 0) {            // if flag is still 0, that means the interrupt was never called
@@ -56,7 +58,7 @@ void main(void) {
             P2->OUT &= ~BIT2;
         }
 
-        if (blue == 1) {
+        else if (blue == 1) {
             P2->OUT |= BIT2;
             P1->OUT &= ~BIT0;
         }
@@ -158,7 +160,7 @@ void TA2_N_IRQHandler(void) {
         SysTick_Delay(33);                          // delay 33 ms
     }
 
-    else if ((25446 < period) && (period < 28055)) {     // check if period is between 35635 & 39375
+    if ((15446 < period) && (period < 25055)) {     // check if period is between 15446 & 25055
         P2->OUT |= BIT2;                                 // turn blue LED on
         P1->OUT &= ~BIT0;                                // turn red LED off
         SysTick_Delay(33);                               // delay 33 ms
