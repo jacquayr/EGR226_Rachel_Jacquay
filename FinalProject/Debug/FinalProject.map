@@ -1,7 +1,7 @@
 ******************************************************************************
                   TI ARM Linker PC v18.12.4                    
 ******************************************************************************
->> Linked Mon Apr  5 21:40:33 2021
+>> Linked Mon Apr  5 21:42:25 2021
 
 OUTPUT FILE NAME:   <FinalProject.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 00003495
@@ -436,7 +436,7 @@ UNDEFED   _system_post_cinit
 00002071  aligned_alloc                  
 00003191  atoi                           
 ffffffff  binit                          
-00000b9b  changeCase                     
+00000b99  changeCase                     
 00002ee5  close                          
 200005ed  closeOpen                      
 0000147f  commandWrite                   
@@ -446,7 +446,7 @@ ffffffff  binit
 00001499  dataWrite                      
 000012cb  delay_micro                    
 000012ef  delay_milli                    
-00000ce9  doorMenu                       
+00000ce7  doorMenu                       
 200005e4  errno                          
 000031dd  exit                           
 000034c9  finddevice                     
@@ -463,7 +463,7 @@ ffffffff  binit
 0000357d  lseek                          
 0000309d  ltoa                           
 00000b35  main                           
-00000be5  mainMenu                       
+00000be3  mainMenu                       
 000036e9  malloc                         
 00002071  memalign                       
 00003625  memccpy                        
@@ -471,7 +471,7 @@ ffffffff  binit
 0000271b  memcpy                         
 000029ed  memset                         
 200007b8  num                            
-00000dbd  openClose                      
+00000dbb  openClose                      
 200007b0  parmbuf                        
 200007b9  pressed                        
 00002cf1  printf                         
@@ -503,10 +503,10 @@ address   name
 00000400  __SYSMEM_SIZE                  
 00000b33  _nop                           
 00000b35  main                           
-00000b9b  changeCase                     
-00000be5  mainMenu                       
-00000ce9  doorMenu                       
-00000dbd  openClose                      
+00000b99  changeCase                     
+00000be3  mainMenu                       
+00000ce7  doorMenu                       
+00000dbb  openClose                      
 00000dfd  LED_init                       
 00000e9d  SystemCoreClockUpdate          
 00001115  SystemInit                     
