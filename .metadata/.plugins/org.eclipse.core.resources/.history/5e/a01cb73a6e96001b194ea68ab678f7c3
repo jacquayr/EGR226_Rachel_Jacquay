@@ -1,0 +1,85 @@
+#include "msp.h"
+#include "Keypad.h"
+#include "LCD.h"
+#include "SysTick.h"
+#include <stdlib.h>
+#include <stdio.h>
+
+//void changeCase(void);
+void mainMenu(void);
+
+//uint8_t count = 0;
+
+void main(void)
+{
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
+    SysTick_Init();
+    Keypad_Init();
+    LCD_Init();
+    Pin_Init();
+
+    commandWrite(0x01);     // clear screen
+    delay_milli(500);       // delay 500 ms
+
+    mainMenu();
+
+    while(1) {
+        pressed = Read_Keypad();                    // call keypad read function and output to pressed
+        if (pressed) {                              // if a 1 is returned
+            Print_Keys();                           // call print keys function with num variable
+            SysTick_Delay(100);                     // delay
+        }
+
+        //count = num;
+        //changeCase();
+    }
+}
+
+/*--------------------------------------------------------------
+ * Function:        changeCase
+ *
+ * Description:     This function changes the case based on the
+ *                  count variable value.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+/*
+void changeCase(void) {
+    switch (count) {        // switch statement
+    case 0 :                // case for 0
+        mainMenu();
+        break;              // break
+
+    default :               // default case
+        mainMenu();
+        break;
+    }
+}*/
+
+/*--------------------------------------------------------------
+ * Function:        mainMenu
+ *
+ * Description:     This function shows the main menu screen.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void mainMenu(void) {
+    commandWrite(0x01);     // clear screen
+    delay_milli(500);       // delay 500 ms
+
+    int i;
+    char first[11] = "Main Menu:";
+
+    commandWrite(0x80);             // send cursor to first line
+    delay_milli(10);                // delay 10 ms
+
+    for (i = 0; i < 10; i++) {
+        dataWrite(first[i]);     // print out each letter
+        delay_milli(10);            // delay 10 ms
+    }
+
+}

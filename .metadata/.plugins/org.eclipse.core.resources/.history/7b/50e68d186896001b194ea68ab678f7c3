@@ -1,0 +1,106 @@
+#include "msp.h"
+#include "Keypad.h"
+#include "LCD.h"
+#include "SysTick.h"
+#include <stdlib.h>
+#include <stdio.h>
+
+void changeCase(void);
+
+uint8_t count = 0;
+
+void main(void)
+{
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
+    Keypad_Init();
+    LCD_Init();
+    Pin_Init();
+    SysTick_Init();
+
+    while(1) {
+        pressed = Read_Keypad();                    // call keypad read function and output to pressed
+        if (pressed) {                              // if a 1 is returned
+            Print_Keys();                        // call print keys function with num variable
+            SysTick_Delay(100);                     // delay
+        }
+    }
+}
+
+/*--------------------------------------------------------------
+ * Function:        changeCase
+ *
+ * Description:     This function changes the case based on the
+ *                  count variable value.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void changeCase(void) {
+    switch (count) {        // switch statement
+    case 0 :                // case for 0
+        P4->OUT |= 0x3F;    // turn on certain bits
+        SysTick_Delay();    // delay 1 sec
+        P4->OUT &= ~0x7F;   // turn all off
+        break;              // break
+
+    case 1 :                // case for 1
+        P4->OUT |= 0x06;    // turn on certain bits
+        SysTick_Delay();    // delay 1 sec
+        P4->OUT &= ~0x7F;   // turn all off
+        break;              // break
+
+    case 2 :                // case for 2
+        P4->OUT |= 0x5B;    // turn on certain bits
+        SysTick_Delay();    // delay 1 sec
+        P4->OUT &= ~0x7F;   // turn all off
+        break;              // break
+
+    case 3 :                // case for 3
+        P4->OUT |= 0x4F;    // turn on certain bits
+        SysTick_Delay();    // delay 1 sec
+        P4->OUT &= ~0x7F;   // turn all off
+        break;              // break
+
+    case 4 :                // case for 4
+        P4->OUT |= 0x66;    // turn on certain bits
+        SysTick_Delay();    // delay 1 sec
+        P4->OUT &= ~0x7F;   // turn all off
+        break;              // break
+
+    case 5 :                // case for 5
+        P4->OUT |= 0x6D;    // turn on certain bits
+        SysTick_Delay();    // delay 1 sec
+        P4->OUT &= ~0x7F;   // turn all off
+        break;              // break
+
+    case 6 :                // case for 6
+        P4->OUT |= 0x7D;    // turn on certain bits
+        SysTick_Delay();    // delay 1 sec
+        P4->OUT &= ~0x7F;   // turn all off
+        break;              // break
+
+    case 7 :                // case for 7
+        P4->OUT |= 0x07;    // turn on certain bits
+        SysTick_Delay();    // delay 1 sec
+        P4->OUT &= ~0x7F;   // turn all off
+        break;              // break
+
+    case 8 :                // case for 8
+        P4->OUT |= 0x7F;    // turn on certain bits
+        SysTick_Delay();    // delay 1 sec
+        P4->OUT &= ~0x7F;   // turn all off
+        break;              // break
+
+    case 9 :                // case for 9
+        P4->OUT |= 0x6F;    // turn on certain bits
+        SysTick_Delay();    // delay 1 sec
+        P4->OUT &= ~0x7F;   // turn all off
+        break;              // break
+
+    default :               // default case
+        P4->OUT &= ~0x7F;   // turn all bits off
+        SysTick_Delay();    // delay 1 sec
+        count = 0;          // reset count to 0
+    }
+}

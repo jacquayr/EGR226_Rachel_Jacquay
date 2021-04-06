@@ -1,0 +1,71 @@
+#include "msp.h"
+#include "Keypad.h"
+#include "LCD.h"
+#include "SysTick.h"
+#include <stdlib.h>
+#include <stdio.h>
+
+//void changeCase(void);
+
+//uint8_t count = 0;
+
+void main(void)
+{
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
+    SysTick_Init();
+    Keypad_Init();
+    LCD_Init();
+    Pin_Init();
+
+    while(1) {
+        pressed = Read_Keypad();                    // call keypad read function and output to pressed
+        if (pressed) {                              // if a 1 is returned
+            Print_Keys();                           // call print keys function with num variable
+            SysTick_Delay(100);                     // delay
+        }
+
+        count = num;
+
+        changeCase();
+    }
+}
+
+/*--------------------------------------------------------------
+ * Function:        changeCase
+ *
+ * Description:     This function changes the case based on the
+ *                  count variable value.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+/*
+void changeCase(void) {
+    switch (count) {        // switch statement
+    case 0 :                // case for 0
+
+        break;              // break
+
+    case 1 :                // case for 1
+
+        break;              // break
+
+    case 2 :                // case for 2
+
+        break;              // break
+
+    case 3 :                // case for 3
+
+        break;              // break
+
+    case 4 :                // case for 4
+
+        break;              // break
+
+    default :               // default case
+
+        break;
+    }
+}
+*/
