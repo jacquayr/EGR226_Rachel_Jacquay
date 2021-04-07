@@ -1,7 +1,7 @@
 ******************************************************************************
                   TI ARM Linker PC v18.12.4                    
 ******************************************************************************
->> Linked Mon Apr  5 15:23:07 2021
+>> Linked Tue Apr  6 19:54:36 2021
 
 OUTPUT FILE NAME:   <Lab11_Part1.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 00000791
@@ -67,8 +67,8 @@ section   page    origin      length       input sections
 .binit     0    00000000    00000000     
 
 .bss       0    20000000    00000008     UNINITIALIZED
-                  20000000    00000002     (.common:currentedge)
-                  20000002    00000002     (.common:flag)
+                  20000000    00000002     (.common:check)
+                  20000002    00000002     (.common:currentedge)
                   20000004    00000002     (.common:lastedge)
                   20000006    00000002     (.common:period)
 
@@ -215,9 +215,9 @@ UNDEFED   _system_post_cinit
 000007fd  _system_pre_init              
 00000801  abort                         
 ffffffff  binit                         
-20000000  currentedge                   
+20000000  check                         
+20000002  currentedge                   
 00000491  emitter_init                  
-20000002  flag                          
 00000000  interruptVectors              
 20000004  lastedge                      
 00000445  main                          
@@ -310,8 +310,8 @@ address   name
 00000814  __TI_Handler_Table_Limit      
 00000828  __TI_CINIT_Base               
 00000838  __TI_CINIT_Limit              
-20000000  currentedge                   
-20000002  flag                          
+20000000  check                         
+20000002  currentedge                   
 20000004  lastedge                      
 20000006  period                        
 20000008  SystemCoreClock               

@@ -1,3 +1,14 @@
+/*-----------------------------------------------------------------------------------------
+ * Author:          Rachel Jacquay
+ * Course:          EGR 226-902
+ * Date:            04/21/2021
+ * Project:         Final Project
+ * File:            main.c
+ * Description:
+-----------------------------------------------------------------------------------------*/
+
+// ADD PORT 4 INTERRUPTS FOR KEYPAD !!!!!!!!!!!!!
+
 #include "msp.h"
 #include "Keypad.h"
 #include "LCD.h"
@@ -170,9 +181,10 @@ void doorMenu(void) {
 }
 
 /*--------------------------------------------------------------
- * Function:
+ * Function:        openClose
  *
- * Description:
+ * Description:     This function turns the LEDs for the door
+ *                  on or off based on which selection they made.
  *
  * Inputs:          none
  *
@@ -191,9 +203,10 @@ void openClose(void) {
 }
 
 /*--------------------------------------------------------------
- * Function:
+ * Function:        LED_init
  *
- * Description:
+ * Description:     This function initializes the red and green
+ *                  LEDs for the door.
  *
  * Inputs:          none
  *
@@ -212,3 +225,4 @@ void LED_init(void) {
     P2->DIR |= BIT1;
     P2->OUT &= ~BIT1;
 }
+

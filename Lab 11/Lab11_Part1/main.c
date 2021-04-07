@@ -15,7 +15,7 @@
 #include "SysTick.h"
 
 // globals
-volatile uint16_t lastedge, currentedge, period, flag;
+volatile uint16_t lastedge, currentedge, period, check;
 
 // function prototypes
 void emitter_init(void);
@@ -35,10 +35,10 @@ void main(void) {
     __enable_irq();                 // enable irq
 
     while(1) {
-        flag = 0;                   // set flag to 0
+        check = 0;                   // set flag to 0
         SysTick_Delay(333);         // delay 333 ms
 
-        if (flag == 0) {            // if flag is still 0, that means the interrupt was never called
+        if (check == 0) {            // if flag is still 0, that means the interrupt was never called
             P1->OUT &= ~BIT0;       // keep LED off
             SysTick_Delay(1);       // delay 1 ms
         }
@@ -126,7 +126,7 @@ void TA2_N_IRQHandler(void) {
     period = currentedge - lastedge;    // set period equal to current edge - last edge
     lastedge = currentedge;             // set last edge equal to current edge
 
-    flag = 1;       // set flag to 1 to tell user that the handler was accessed
+    check = 1;       // set flag to 1 to tell user that the handler was accessed
 
     if ((35635 < period) && (period < 39375)) {     // check if period is between 35635 & 39375
         P1->OUT |= BIT0;                            // turn red LED on

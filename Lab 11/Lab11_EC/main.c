@@ -15,7 +15,7 @@
 #include "SysTick.h"
 
 // globals
-volatile uint16_t lastedge, currentedge, period, flag, Bflag, red, blue;
+volatile uint16_t lastedge, currentedge, period, check, flag, red, blue;
 
 // function prototypes
 void emitter_init(void);
@@ -42,12 +42,12 @@ void main(void) {
     blue = 0;
 
     while(1) {
-        flag = 0;                   // set flag to 0
+        check = 0;                   // set flag to 0
         red = 0;
         blue = 0;
         SysTick_Delay(333);         // delay 333 ms
 
-        if (flag == 0) {            // if flag is still 0, that means the interrupt was never called
+        if (check == 0) {            // if flag is still 0, that means the interrupt was never called
             P1->OUT &= ~BIT0;       // keep LEDs off
             P2->OUT &= ~BIT2;
             SysTick_Delay(1);       // delay 1 ms
@@ -152,7 +152,7 @@ void TA2_N_IRQHandler(void) {
     period = currentedge - lastedge;    // set period equal to current edge - last edge
     lastedge = currentedge;             // set last edge equal to current edge
 
-    flag = 1;       // set flag to 1 to tell user that the handler was accessed
+    check = 1;       // set flag to 1 to tell user that the handler was accessed
 
     if ((35635 < period) && (period < 39375)) {     // check if period is between 35635 & 39375
         P1->OUT |= BIT0;                            // turn red LED on
@@ -206,7 +206,7 @@ void debounce(void) {
         SysTick_Delay(10);                                                 // delay for 10 ms
 
         if (((P6->IN & BIT4) != BIT4) || ((P6->IN & BIT5) != BIT5)) {      // check switch again
-            Bflag = 1;                                                     // set flag to 1
+            flag = 1;                                                     // set flag to 1
         }
     }
 }
@@ -230,7 +230,7 @@ void PORT6_IRQHandler(void) {
     if (P6->IFG & 0x30) {       // if port 6 interrupts were changed and the flag was set
         debounce();             // call debounce function
 
-        while (Bflag == 1) {                        // do while flag is set from debounce function
+        while (flag == 1) {                        // do while flag is set from debounce function
             if ((P6->IN & BIT4) != BIT4) {          // if red button is pressed
                 TIMER_A0->CCR[0] = 37509;           // set period
                 TIMER_A0->CCR[1] = 37509 / 2;       // set duty cycle
@@ -245,7 +245,7 @@ void PORT6_IRQHandler(void) {
                 red = 0;
             }
 
-            Bflag = 0;                               // reset flag to 0
+            flag = 0;                               // reset flag to 0
         }
     }
 
