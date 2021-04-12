@@ -2603,3 +2603,164 @@ directory of your installation. View the ReadMe.txt file there
 for instructions.
 (Emulation package 8.4.0.00006)
 
+
+!ENTRY org.eclipse.egit.core 4 0 2021-04-11 21:42:48.246
+!MESSAGE Ignoring /FinalProject/Debug failed
+!STACK 0
+java.io.FileNotFoundException: C:\Users\rache\Documents\Classes\Winter 2021\EGR 226\GitHub Files\EGR226_Rachel_Jacquay\.gitignore (Access is denied)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(Unknown Source)
+	at java.io.FileInputStream.<init>(Unknown Source)
+	at org.eclipse.jgit.treewalk.FileTreeIterator$FileEntry.openInputStream(FileTreeIterator.java:417)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator$PerDirectoryIgnoreNode.load(WorkingTreeIterator.java:1318)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator$RootIgnoreNode.load(WorkingTreeIterator.java:1338)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.getIgnoreNode(WorkingTreeIterator.java:755)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isDirectoryIgnored(WorkingTreeIterator.java:1517)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isDirectoryIgnored(WorkingTreeIterator.java:1495)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isEntryIgnored(WorkingTreeIterator.java:737)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isEntryIgnored(WorkingTreeIterator.java:697)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isEntryIgnored(WorkingTreeIterator.java:684)
+	at org.eclipse.jgit.treewalk.FileTreeIterator.createSubtreeIterator(FileTreeIterator.java:212)
+	at org.eclipse.jgit.treewalk.AbstractTreeIterator.createSubtreeIterator(AbstractTreeIterator.java:592)
+	at org.eclipse.jgit.treewalk.TreeWalk.enterSubtree(TreeWalk.java:1300)
+	at org.eclipse.egit.core.RepositoryUtil.canBeAutoIgnored(RepositoryUtil.java:726)
+	at org.eclipse.egit.core.Activator$IgnoreDerivedResources$1.visit(Activator.java:740)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:64)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:74)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:74)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:48)
+	at org.eclipse.egit.core.Activator$IgnoreDerivedResources.resourceChanged(Activator.java:716)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:297)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:287)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:150)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:376)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1499)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2302)
+	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:41)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:60)
+
+!ENTRY org.eclipse.egit.core 4 0 2021-04-11 21:42:49.995
+!MESSAGE Ignoring /Test_Final/Debug failed
+!STACK 0
+java.io.FileNotFoundException: C:\Users\rache\Documents\Classes\Winter 2021\EGR 226\GitHub Files\EGR226_Rachel_Jacquay\.gitignore (Access is denied)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(Unknown Source)
+	at java.io.FileInputStream.<init>(Unknown Source)
+	at org.eclipse.jgit.treewalk.FileTreeIterator$FileEntry.openInputStream(FileTreeIterator.java:417)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator$PerDirectoryIgnoreNode.load(WorkingTreeIterator.java:1318)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator$RootIgnoreNode.load(WorkingTreeIterator.java:1338)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.getIgnoreNode(WorkingTreeIterator.java:755)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isDirectoryIgnored(WorkingTreeIterator.java:1517)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isDirectoryIgnored(WorkingTreeIterator.java:1495)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isEntryIgnored(WorkingTreeIterator.java:737)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isEntryIgnored(WorkingTreeIterator.java:697)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isEntryIgnored(WorkingTreeIterator.java:684)
+	at org.eclipse.jgit.treewalk.FileTreeIterator.createSubtreeIterator(FileTreeIterator.java:212)
+	at org.eclipse.jgit.treewalk.AbstractTreeIterator.createSubtreeIterator(AbstractTreeIterator.java:592)
+	at org.eclipse.jgit.treewalk.TreeWalk.enterSubtree(TreeWalk.java:1300)
+	at org.eclipse.egit.core.RepositoryUtil.canBeAutoIgnored(RepositoryUtil.java:726)
+	at org.eclipse.egit.core.Activator$IgnoreDerivedResources$1.visit(Activator.java:740)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:64)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:74)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:74)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:48)
+	at org.eclipse.egit.core.Activator$IgnoreDerivedResources.resourceChanged(Activator.java:716)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:297)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:287)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:150)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:376)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1499)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2302)
+	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:41)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:60)
+
+!ENTRY org.eclipse.egit.core 4 0 2021-04-11 21:49:06.466
+!MESSAGE Ignoring /FinalProject/Debug failed
+!STACK 0
+java.io.FileNotFoundException: C:\Users\rache\Documents\Classes\Winter 2021\EGR 226\GitHub Files\EGR226_Rachel_Jacquay\.gitignore (Access is denied)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(Unknown Source)
+	at java.io.FileInputStream.<init>(Unknown Source)
+	at org.eclipse.jgit.treewalk.FileTreeIterator$FileEntry.openInputStream(FileTreeIterator.java:417)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator$PerDirectoryIgnoreNode.load(WorkingTreeIterator.java:1318)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator$RootIgnoreNode.load(WorkingTreeIterator.java:1338)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.getIgnoreNode(WorkingTreeIterator.java:755)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isDirectoryIgnored(WorkingTreeIterator.java:1517)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isDirectoryIgnored(WorkingTreeIterator.java:1495)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isEntryIgnored(WorkingTreeIterator.java:737)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isEntryIgnored(WorkingTreeIterator.java:697)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isEntryIgnored(WorkingTreeIterator.java:684)
+	at org.eclipse.jgit.treewalk.FileTreeIterator.createSubtreeIterator(FileTreeIterator.java:212)
+	at org.eclipse.jgit.treewalk.AbstractTreeIterator.createSubtreeIterator(AbstractTreeIterator.java:592)
+	at org.eclipse.jgit.treewalk.TreeWalk.enterSubtree(TreeWalk.java:1300)
+	at org.eclipse.egit.core.RepositoryUtil.canBeAutoIgnored(RepositoryUtil.java:726)
+	at org.eclipse.egit.core.Activator$IgnoreDerivedResources$1.visit(Activator.java:740)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:64)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:74)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:74)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:48)
+	at org.eclipse.egit.core.Activator$IgnoreDerivedResources.resourceChanged(Activator.java:716)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:297)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:287)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:150)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:376)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1499)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2302)
+	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:41)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:60)
+
+!ENTRY com.ti.ccstudio.debug 1 0 2021-04-11 22:30:38.460
+!MESSAGE DS_ERROR: CS_DAP_0: Error connecting to the target: (Error -260 @ 0x0) An attempt to connect to the XDS110 failed. The cause may be one or more of: no XDS110 is connected, invalid firmware update, invalid XDS110 serial number, or faulty USB cable. The firmware and serial number may be updated using the xdsdfu utility found in the .../ccs_base/common/uscif/xds110 directory of your installation. View the ReadMe.txt file there for instructions. (Emulation package 8.4.0.00006) 
+
+
+!ENTRY com.ti.ccstudio.debug 1 0 2021-04-11 22:30:38.898
+!MESSAGE DS_ERROR: Error connecting to the target:
+(Error -260 @ 0x0)
+An attempt to connect to the XDS110 failed.
+The cause may be one or more of: no XDS110 is connected, invalid
+firmware update, invalid XDS110 serial number, or faulty USB
+cable. The firmware and serial number may be updated using the
+xdsdfu utility found in the .../ccs_base/common/uscif/xds110
+directory of your installation. View the ReadMe.txt file there
+for instructions.
+(Emulation package 8.4.0.00006)
+
+
+!ENTRY org.eclipse.egit.core 4 0 2021-04-11 23:03:50.198
+!MESSAGE Ignoring /Test_Final/Debug failed
+!STACK 0
+java.io.FileNotFoundException: C:\Users\rache\Documents\Classes\Winter 2021\EGR 226\GitHub Files\EGR226_Rachel_Jacquay\.gitignore (Access is denied)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(Unknown Source)
+	at java.io.FileInputStream.<init>(Unknown Source)
+	at org.eclipse.jgit.treewalk.FileTreeIterator$FileEntry.openInputStream(FileTreeIterator.java:417)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator$PerDirectoryIgnoreNode.load(WorkingTreeIterator.java:1318)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator$RootIgnoreNode.load(WorkingTreeIterator.java:1338)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.getIgnoreNode(WorkingTreeIterator.java:755)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isDirectoryIgnored(WorkingTreeIterator.java:1517)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isDirectoryIgnored(WorkingTreeIterator.java:1495)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isEntryIgnored(WorkingTreeIterator.java:737)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isEntryIgnored(WorkingTreeIterator.java:697)
+	at org.eclipse.jgit.treewalk.WorkingTreeIterator.isEntryIgnored(WorkingTreeIterator.java:684)
+	at org.eclipse.jgit.treewalk.FileTreeIterator.createSubtreeIterator(FileTreeIterator.java:212)
+	at org.eclipse.jgit.treewalk.AbstractTreeIterator.createSubtreeIterator(AbstractTreeIterator.java:592)
+	at org.eclipse.jgit.treewalk.TreeWalk.enterSubtree(TreeWalk.java:1300)
+	at org.eclipse.egit.core.RepositoryUtil.canBeAutoIgnored(RepositoryUtil.java:726)
+	at org.eclipse.egit.core.Activator$IgnoreDerivedResources$1.visit(Activator.java:740)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:64)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:74)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:74)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:48)
+	at org.eclipse.egit.core.Activator$IgnoreDerivedResources.resourceChanged(Activator.java:716)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:297)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:287)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:150)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:376)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1499)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2302)
+	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:41)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:60)

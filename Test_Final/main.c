@@ -40,11 +40,11 @@ void main(void)
             SysTick_Delay(1);               // delay for 1 ms
         }
 
-        if (num <= 9) {                     // if number pressed is less than or equal to 9
+        if (num == 1) {                     // if number pressed is less than or equal to 9
             DC = period * (num * 0.1);      // set duty cycle to match the intensity of whichever button was pressed
         }
 
-        else if (num == 10) {               // if number pressed is *
+        if (num == 2) {               // if number pressed is *
             DC = period * 0.99;             // set duty cycle to the max speed
         }
 

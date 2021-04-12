@@ -19,17 +19,24 @@
 #include <stdio.h>
 
 void changeState(void);
+void PORT6_IRQHandler(void);
+void debounce(void);
+void openDoor(void);
+void closeDoor(void);
 
 void red(void);
 void blue(void);
 void green(void);
 
-uint8_t state;
-volatile int DC;                // global volatile variables
-volatile int period;
+uint8_t state, buttonflag;
+volatile int DCduty = 0;
+volatile int DCperiod = 30000;
+volatile int Sduty = 1500;
+volatile int Speriod = 20000;
 
 void main(void)
 {
+    __disable_irq();
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
     SysTick_Init();                                 // inits
     Pin_Init();         // HAS TO GO BEFORE LCD INIT
@@ -37,8 +44,12 @@ void main(void)
     Keypad_Init();
     LED_init();
     DC_init();
-    //Servo_init();
+    Button_init();
+    Servo_init();
     //RGB_init();
+
+    NVIC_EnableIRQ(PORT6_IRQn);                     // NVIC call for buttons
+    __enable_irq();
 
     commandWrite(0x01);     // clear screen
     delay_milli(500);       // delay 500 ms
@@ -66,7 +77,8 @@ void main(void)
 void changeState(void) {
     uint8_t flag, push;      // local variables
 
-    if (state == 0) {
+    switch (state) {
+    case 0 :
         mainMenu();
         flag = 1;
 
@@ -93,9 +105,10 @@ void changeState(void) {
                 }
             }
         }
-    }
+        break;
 
-    if (state == 1) {
+
+    case 1 :
         doorMenu();
         flag = 1;
 
@@ -114,31 +127,30 @@ void changeState(void) {
                 }
             }
         }
-    }
+        break;
 
-    if (state == 2) {
+    case 2 :
         P1->OUT &= ~BIT0;   // green LED on, red LED off
         P2->OUT |= BIT1;
 
-        // add in opening the door function !!!!!!!!!
+        openDoor(); // add in opening the door function !!!!!!!!!
 
         SysTick_Delay(500);
         state = 0;
-    }
+        break;
 
-    if (state == 3) {
+    case 3 :
         P2->OUT &= ~BIT1;   // red LED on, green LED off
         P1->OUT |= BIT0;
 
-        // add in closing the door function !!!!!!!!!
+        closeDoor();    // add in closing the door function !!!!!!!!!
 
         SysTick_Delay(500);
         state = 0;
-    }
+        break;
 
-    if (state == 4) {
+    case 4 :
         motorMenu();
-
         flag = 1;
 
         while (flag) {
@@ -146,31 +158,132 @@ void changeState(void) {
 
             if (push) {
                 if (num <= 9) {
-                    DC = period * (num * 0.1);      // set duty cycle to match the intensity of whichever button was pressed
+                    DCduty = DCperiod * (num * 0.1);
                     flag = 0;
                     push = 0;
                 }
 
                 if (num == 10) {
-                    DC = period * 0.99;
+                    DCduty = DCperiod;
                     flag = 0;
                     push = 0;
                 }
 
                 if (num == 11) {
-                    DC = 0;
+                    DCduty = 0;
                     flag = 0;
                     push = 0;
                 }
 
-                TIMER_A0->CCR[4] = DC;              // send the duty cycle to Timer A's CCR1
+                TIMER_A0->CCR[4] = DCduty;              // send the duty cycle to Timer A's CCR1
+            }
+        }
+        state = 0;
+        break;
+
+    case 5 :
+        lightsMenu();
+        flag = 1;
+
+        while (flag) {
+            push = Read_Keypad();
+
+            if (push) {
+                if (num == 1) {
+                    red();
+                    flag = 0;
+                    push = 0;
+                }
+
+                if (num == 2) {
+                    blue();
+                    flag = 0;
+                    push = 0;
+                }
+
+                if (num == 3) {
+                    green();
+                    flag = 0;
+                    push = 0;
+                }
+            }
+        }
+        state = 0;
+        break;
+    }
+}
+
+/*--------------------------------------------------------------
+ * Function:        debounce
+ *
+ * Description:     This function deals with the switch debounce
+ *                  and determines if button is actually pressed.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void debounce(void) {
+    if (((P6->IN & BIT4) != BIT4) || ((P6->IN & BIT5) != BIT5)) {          // if any switch is pressed
+        SysTick_Delay(10);                                                 // delay for 10 ms
+
+        if (((P6->IN & BIT4) != BIT4) || ((P6->IN & BIT5) != BIT5)) {      // check switch again
+            buttonflag = 1;                                                      // set button flag to 1
+        }
+    }
+}
+
+/*--------------------------------------------------------------
+ * Function:        PORT6_IRQHandler
+ *
+ * Description:     This function deals with the GPIO interrupt
+ *                  and calls the debounce function, then checks
+ *                  if any of buttons are pressed, and acts
+ *                  accordingly.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void PORT6_IRQHandler(void) {
+    // red = P6.4
+    // blue = P6.5
+
+    if (P6->IFG & 0x30) {       // if port 6 interrupts were changed and the flag was set
+        debounce();             // call debounce function
+
+        while (buttonflag == 1) {                         // do while button flag is set from debounce function
+            if ((P6->IN & BIT4) != BIT4) {          // if red button is pressed
+                TIMER_A0->CCR[4] = 0;               // set duty cycle
             }
 
-            state = 0;
+            if ((P6->IN & BIT5) != BIT5) {          // if blue button is pressed
+            }
+
+            buttonflag = 0;       // reset button flag to 0
         }
     }
 
-    if (state == 5) {
-        lightsMenu();
-    }
+    P6->IFG &= ~0x30;       // reset interrupt flag
+}
+
+
+void openDoor(void) {
+
+}
+
+void closeDoor(void) {
+
+}
+
+void red(void) {
+
+}
+
+void blue(void) {
+
+}
+
+void green(void) {
+
 }
