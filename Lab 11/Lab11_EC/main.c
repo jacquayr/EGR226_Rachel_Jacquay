@@ -15,7 +15,7 @@
 #include "SysTick.h"
 
 // globals
-volatile uint16_t lastedge, currentedge, period, check, flag, red, blue;
+volatile uint16_t lastedge, currentedge, period, check, flag;
 
 // function prototypes
 void emitter_init(void);
@@ -34,33 +34,18 @@ void main(void) {
     SysTick_Init();
     button_init();
 
-    NVIC_EnableIRQ(TA2_N_IRQn);     // NVIC call
-    NVIC_EnableIRQ(PORT6_IRQn);     // NVIC call
+    NVIC_EnableIRQ(TA2_N_IRQn);     // NVIC call for receiver
+    NVIC_EnableIRQ(PORT6_IRQn);     // NVIC call for buttons
     __enable_irq();                 // enable irq
 
-    red = 0;
-    blue = 0;
-
     while(1) {
-        check = 0;                   // set flag to 0
-        red = 0;
-        blue = 0;
+        check = 0;                  // set interrupt check flag to 0
         SysTick_Delay(333);         // delay 333 ms
 
-        if (check == 0) {            // if flag is still 0, that means the interrupt was never called
+        if (check == 0) {           // if interrupt check flag is still 0, that means the interrupt was never called
             P1->OUT &= ~BIT0;       // keep LEDs off
             P2->OUT &= ~BIT2;
             SysTick_Delay(1);       // delay 1 ms
-        }
-
-        if (red == 1) {
-            P1->OUT |= BIT0;
-            P2->OUT &= ~BIT2;
-        }
-
-        else if (blue == 1) {
-            P2->OUT |= BIT2;
-            P1->OUT &= ~BIT0;
         }
     }
 }
@@ -116,7 +101,7 @@ void receiver_init(void) {
  * Function:        LED_init
  *
  * Description:     This function initializes the LEDs on P1.0
- *                  and P2.2.
+ *                  and P2.2, for red and blue respectively.
  *
  * Inputs:          none
  *
@@ -138,7 +123,9 @@ void LED_init(void) {
  * Function:        TA2_N_IRQHandler
  *
  * Description:     This function is the interrupt handler for
- *                  TIMERA2.1. It turns the
+ *                  TIMERA2.1. It turns the red LED on when the
+ *                  receiver is getting the 10Hz signal from the
+ *                  emitter.
  *
  * Inputs:          none
  *
@@ -160,19 +147,18 @@ void TA2_N_IRQHandler(void) {
         SysTick_Delay(33);                          // delay 33 ms
     }
 
-    if ((15446 < period) && (period < 25055)) {     // check if period is between 15446 & 25055
-        P2->OUT |= BIT2;                                 // turn blue LED on
-        P1->OUT &= ~BIT0;                                // turn red LED off
-        SysTick_Delay(33);                               // delay 33 ms
+    else if ((17446 < period) && (period < 21055)) {     // check if period is between 15446 & 25055
+        P2->OUT |= BIT2;                            // turn blue LED on
+        P1->OUT &= ~BIT0;                           // turn red LED off
+        SysTick_Delay(33);                          // delay 33 ms
     }
-
-    TIMER_A0->CCTL[1] &= ~(TIMER_A_CCTLN_CCIFG);    // clear TA2.1 interrupt flag
 }
 
 /*--------------------------------------------------------------
  * Function:        button_init
  *
- * Description:     This function initalizes the two buttons.
+ * Description:     This function initializes the two buttons
+ *                  with interrupts.
  *
  * Inputs:          none
  *
@@ -206,7 +192,7 @@ void debounce(void) {
         SysTick_Delay(10);                                                 // delay for 10 ms
 
         if (((P6->IN & BIT4) != BIT4) || ((P6->IN & BIT5) != BIT5)) {      // check switch again
-            flag = 1;                                                     // set flag to 1
+            flag = 1;                                                      // set button flag to 1
         }
     }
 }
@@ -230,22 +216,18 @@ void PORT6_IRQHandler(void) {
     if (P6->IFG & 0x30) {       // if port 6 interrupts were changed and the flag was set
         debounce();             // call debounce function
 
-        while (flag == 1) {                        // do while flag is set from debounce function
+        while (flag == 1) {                        // do while button flag is set from debounce function
             if ((P6->IN & BIT4) != BIT4) {          // if red button is pressed
                 TIMER_A0->CCR[0] = 37509;           // set period
                 TIMER_A0->CCR[1] = 37509 / 2;       // set duty cycle
-                red = 1;
-                blue = 0;
             }
 
             else if ((P6->IN & BIT5) != BIT5) {     // if blue button is pressed
                 TIMER_A0->CCR[0] = 26785;           // set period
                 TIMER_A0->CCR[1] = 26785 / 2;       // set duty cycle
-                blue = 1;
-                red = 0;
             }
 
-            flag = 0;                               // reset flag to 0
+            flag = 0;       // reset button flag to 0
         }
     }
 

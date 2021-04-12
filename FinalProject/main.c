@@ -7,32 +7,38 @@
  * Description:
 -----------------------------------------------------------------------------------------*/
 
-// ADD PORT 4 INTERRUPTS FOR KEYPAD !!!!!!!!!!!!!
+// ADD INTERRUPTS FOR E-STOP BUTTONS !!!!!!!!!!!!!
 
 #include "msp.h"
 #include "Keypad.h"
 #include "LCD.h"
 #include "SysTick.h"
+#include "Menu.h"
+#include "InitPins.h"
 #include <stdlib.h>
 #include <stdio.h>
 
-void changeCase(void);
-void mainMenu(void);
-void doorMenu(void);
-void openClose(void);
-void LED_init(void);
+void changeState(void);
 
-uint8_t count = 0;
-uint8_t closeOpen = 0;
+void red(void);
+void blue(void);
+void green(void);
+
+uint8_t state;
+volatile int DC;                // global volatile variables
+volatile int period;
 
 void main(void)
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
-    SysTick_Init();
+    SysTick_Init();                                 // inits
     Pin_Init();         // HAS TO GO BEFORE LCD INIT
     LCD_Init();
     Keypad_Init();
     LED_init();
+    DC_init();
+    //Servo_init();
+    //RGB_init();
 
     commandWrite(0x01);     // clear screen
     delay_milli(500);       // delay 500 ms
@@ -40,22 +46,15 @@ void main(void)
     commandWrite(0x0C);     // turn cursor off
     delay_milli(10);        // delay 100 ms
 
-    mainMenu();
+    state = 0;
 
     while(1) {
-        pressed = Read_Keypad();                    // call keypad read function and output to pressed
-        if (pressed) {                              // if a 1 is returned
-            Print_Keys();                           // call print keys function with num variable
-            SysTick_Delay(100);                     // delay
-
-            count = num;
-            changeCase();
-        }
+        changeState();
     }
 }
 
 /*--------------------------------------------------------------
- * Function:        changeCase
+ * Function:        changeState
  *
  * Description:     This function changes the case based on the
  *                  count variable value.
@@ -64,165 +63,114 @@ void main(void)
  *
  * Outputs:         none
  *-------------------------------------------------------------*/
-void changeCase(void) {
-    switch (count) {        // switch statement
-    case 0 :
+void changeState(void) {
+    uint8_t flag, push;      // local variables
+
+    if (state == 0) {
         mainMenu();
-        break;              // break
+        flag = 1;
 
-    case 1 :
-        doorMenu();
-        pressed = Read_Keypad();                    // call keypad read function and output to pressed
-        if (pressed) {                              // if a 1 is returned
-            Print_Keys();                           // call print keys function with num variable
-            SysTick_Delay(100);                     // delay
+        while (flag) {
+            push = Read_Keypad();
 
-            closeOpen = num;
+            if (push) {
+                if (num == 1) {
+                    state = 1;
+                    flag = 0;
+                    push = 0;
+                }
+
+                else if (num == 2) {
+                    state = 4;
+                    flag = 0;
+                    push = 0;
+                }
+
+                else if (num == 3) {
+                    state = 5;
+                    flag = 0;
+                    push = 0;
+                }
+            }
         }
-        openClose();
-        break;
-
-    default :               // default case
-        mainMenu();
-        break;
-    }
-}
-
-/*--------------------------------------------------------------
- * Function:        mainMenu
- *
- * Description:     This function shows the main menu screen.
- *
- * Inputs:          none
- *
- * Outputs:         none
- *-------------------------------------------------------------*/
-void mainMenu(void) {
-    int i;
-    char first[10] = "Main Menu:";
-    char second[13] = "[1] Door Menu";
-    char third[14] = "[2] Motor Menu";
-    char fourth[15] = "[3] Lights Menu";
-
-    commandWrite(0x80);             // send cursor to first line
-    delay_milli(10);                // delay 10 ms
-
-    for (i = 0; i < 10; i++) {
-        dataWrite(first[i]);        // print out each letter
-        delay_milli(10);            // delay 10 ms
     }
 
-    commandWrite(0xC0);             // send cursor to second line
-    delay_milli(10);                // delay 10 ms
+    if (state == 1) {
+        doorMenu();
+        flag = 1;
 
-    for (i = 0; i < 13; i++) {
-        dataWrite(second[i]);       // print out each letter
-        delay_milli(10);            // delay 10 ms
+        while (flag) {
+            push = Read_Keypad();
+
+            if (push) {
+                if (num == 1) {         // open door
+                    state = 2;
+                    flag = 0;
+                }
+
+                if (num == 2) {    // close door
+                    state = 3;
+                    flag = 0;
+                }
+            }
+        }
     }
 
-    commandWrite(0x90);             // send cursor to third line
-    delay_milli(10);                // delay 10 ms
-
-    for (i = 0; i < 14; i++) {
-        dataWrite(third[i]);        // print out each letter
-        delay_milli(10);            // delay 10 ms
-    }
-
-    commandWrite(0xD0);             // send cursor to fourth line
-    delay_milli(10);                // delay 10 ms
-
-    for (i = 0; i < 15; i++) {
-        dataWrite(fourth[i]);       // print out each letter
-        delay_milli(10);            // delay 10 ms
-    }
-}
-
-/*--------------------------------------------------------------
- * Function:        doorMenu
- *
- * Description:     This function shows the door menu screen.
- *
- * Inputs:          none
- *
- * Outputs:         none
- *-------------------------------------------------------------*/
-void doorMenu(void) {
-    int i;
-    char first[10] = "Door Menu:";
-    char second[13] = "[1] Open Door";
-    char third[14] = "[2] Close Door";
-
-    commandWrite(0x01);     // clear screen
-    delay_milli(500);       // delay 500 ms
-
-    commandWrite(0x80);             // send cursor to first line
-    delay_milli(10);                // delay 10 ms
-
-    for (i = 0; i < 10; i++) {
-        dataWrite(first[i]);        // print out each letter
-        delay_milli(10);            // delay 10 ms
-    }
-
-    commandWrite(0xC0);             // send cursor to second line
-    delay_milli(10);                // delay 10 ms
-
-    for (i = 0; i < 13; i++) {
-        dataWrite(second[i]);       // print out each letter
-        delay_milli(10);            // delay 10 ms
-    }
-
-    commandWrite(0x90);             // send cursor to third line
-    delay_milli(10);                // delay 10 ms
-
-    for (i = 0; i < 14; i++) {
-        dataWrite(third[i]);        // print out each letter
-        delay_milli(10);            // delay 10 ms
-    }
-}
-
-/*--------------------------------------------------------------
- * Function:        openClose
- *
- * Description:     This function turns the LEDs for the door
- *                  on or off based on which selection they made.
- *
- * Inputs:          none
- *
- * Outputs:         none
- *-------------------------------------------------------------*/
-void openClose(void) {
-    if (closeOpen == 1) {
-        P1->OUT &= ~BIT0;
+    if (state == 2) {
+        P1->OUT &= ~BIT0;   // green LED on, red LED off
         P2->OUT |= BIT1;
+
+        // add in opening the door function !!!!!!!!!
+
+        SysTick_Delay(500);
+        state = 0;
     }
 
-    else if (closeOpen == 2) {
-        P2->OUT &= ~BIT1;
+    if (state == 3) {
+        P2->OUT &= ~BIT1;   // red LED on, green LED off
         P1->OUT |= BIT0;
+
+        // add in closing the door function !!!!!!!!!
+
+        SysTick_Delay(500);
+        state = 0;
+    }
+
+    if (state == 4) {
+        motorMenu();
+
+        flag = 1;
+
+        while (flag) {
+            push = Read_Keypad();
+
+            if (push) {
+                if (num <= 9) {
+                    DC = period * (num * 0.1);      // set duty cycle to match the intensity of whichever button was pressed
+                    flag = 0;
+                    push = 0;
+                }
+
+                if (num == 10) {
+                    DC = period * 0.99;
+                    flag = 0;
+                    push = 0;
+                }
+
+                if (num == 11) {
+                    DC = 0;
+                    flag = 0;
+                    push = 0;
+                }
+
+                TIMER_A0->CCR[4] = DC;              // send the duty cycle to Timer A's CCR1
+            }
+
+            state = 0;
+        }
+    }
+
+    if (state == 5) {
+        lightsMenu();
     }
 }
-
-/*--------------------------------------------------------------
- * Function:        LED_init
- *
- * Description:     This function initializes the red and green
- *                  LEDs for the door.
- *
- * Inputs:          none
- *
- * Outputs:         none
- *-------------------------------------------------------------*/
-void LED_init(void) {
-    // red LED = P1.0
-    P1->SEL0 &= ~BIT0;
-    P1->SEL1 &= ~BIT0;
-    P1->DIR |= BIT0;
-    P1->OUT |= BIT0;
-
-    // green LED = P2.1
-    P2->SEL0 &= ~BIT1;
-    P2->SEL1 &= ~BIT1;
-    P2->DIR |= BIT1;
-    P2->OUT &= ~BIT1;
-}
-

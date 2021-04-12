@@ -6,6 +6,9 @@
  */
 
 #include "Keypad.h"
+#include "SysTick.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 /*--------------------------------------------------------------
  * Function:        Keypad_Init
@@ -46,7 +49,7 @@ uint8_t Read_Keypad(void) {
         SysTick_Delay(10);                  // call systick delay
         row = P4->IN & 0x0F;                // read all rows
 
-        while ( !(P4IN & BIT0) | !(P4IN & BIT1) |!(P4IN & BIT2) |!(P4IN & BIT3) );      // while nothing is pressed
+        while ( !(P4IN & BIT0) | !(P4IN & BIT1) |!(P4IN & BIT2) |!(P4IN & BIT3) );      // while button is held
 
         if (row != 0x0F)    // if something is pressed
             break;          // break out of for loop

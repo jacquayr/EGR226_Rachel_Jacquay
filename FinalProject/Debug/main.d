@@ -20,6 +20,8 @@ main.obj: C:/ti/ccs930/ccs/ccs_base/arm/include/system_msp432p401r.h
 main.obj: ../Keypad.h
 main.obj: ../LCD.h
 main.obj: ../SysTick.h
+main.obj: ../Menu.h
+main.obj: ../InitPins.h
 main.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdlib.h
 main.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/_ti_config.h
 main.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/linkage.h
@@ -46,6 +48,8 @@ C:/ti/ccs930/ccs/ccs_base/arm/include/system_msp432p401r.h:
 ../Keypad.h: 
 ../LCD.h: 
 ../SysTick.h: 
+../Menu.h: 
+../InitPins.h: 
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdlib.h: 
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/_ti_config.h: 
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/linkage.h: 

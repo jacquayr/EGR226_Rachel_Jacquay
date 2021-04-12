@@ -112,7 +112,9 @@ void LED_init(void) {
  * Function:        TA2_N_IRQHandler
  *
  * Description:     This function is the interrupt handler for
- *                  TIMERA2.1. It turns the
+ *                  TIMERA2.1. It turns the red LED on when the
+ *                  receiver is getting the 10Hz signal from the
+ *                  emitter.
  *
  * Inputs:          none
  *
