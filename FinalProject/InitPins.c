@@ -84,14 +84,53 @@ void Button_init(void) {
  *
  * Outputs:         none
  *-------------------------------------------------------------*/
-void Servo_init(void) {
-    P2->SEL0 |= BIT6;   // configure P2.6 for PWM
+void Servo_init(void) {                                                             // FIX THIS !!!!!!!!
+    P2->SEL0 |= BIT5;   // configure P2.5 for PWM
+    P2->SEL1 &= ~BIT5;
+    P2->DIR |= BIT5;
+
+    // TimerA 0.3 for P2.6
+    TIMER_A0->CCTL[2] |= TIMER_A_CCTLN_OUTMOD_7;    // set to outmode 7
+    TIMER_A0->CCR[2] = 9000;                        // set duty cycle
+    TIMER_A0->CTL = 0x0214;                        // set to SMCLK, up mode, clear TAR to start
+}
+
+/*--------------------------------------------------------------
+ * Function:        RGB_init
+ *
+ * Description:     This function initializes the RGB LED.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void RGB_init(void) {
+    // green LED = P2.6 --> TIMER A 0.3
+    // red LED = P5.6 --> TIMER A 2.1
+    // blue LED = P6.6 --> TIMER A 2.3
+
+    P2->SEL0 |= BIT6;
     P2->SEL1 &= ~BIT6;
     P2->DIR |= BIT6;
 
-    // TimerA 0.3 for P2.6
-    TIMER_A0->CCR[0] |= 20000;                      // set period amount
     TIMER_A0->CCTL[3] |= TIMER_A_CCTLN_OUTMOD_7;    // set to outmode 7
-    TIMER_A0->CCR[3] = 1500;                           // set duty cycle
+    TIMER_A0->CCR[3] = 0;                           // set duty cycle
     TIMER_A0->CTL |= 0x0214;                        // set to SMCLK, up mode, clear TAR to start
+
+    P5->SEL0 |= BIT6;
+    P5->SEL1 &= ~BIT6;
+    P5->DIR |= BIT6;
+
+    TIMER_A2->CCR[0] = 30000;                           // set duty cycle
+    TIMER_A2->CCTL[1] |= TIMER_A_CCTLN_OUTMOD_7;    // set to outmode 7
+    TIMER_A2->CCR[1] = 0;                           // set duty cycle
+    TIMER_A2->CTL |= 0x0214;                        // set to SMCLK, up mode, clear TAR to start
+
+    P6->SEL0 |= BIT6;
+    P6->SEL1 &= ~BIT6;
+    P6->DIR |= BIT6;
+
+    TIMER_A2->CCTL[3] |= TIMER_A_CCTLN_OUTMOD_7;    // set to outmode 7
+    TIMER_A2->CCR[3] = 0;                           // set duty cycle
+    TIMER_A2->CTL |= 0x0214;                        // set to SMCLK, up mode, clear TAR to start
 }

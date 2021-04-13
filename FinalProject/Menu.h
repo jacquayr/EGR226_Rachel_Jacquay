@@ -14,5 +14,8 @@ void mainMenu(void);
 void doorMenu(void);
 void motorMenu(void);
 void lightsMenu(void);
+void redMenu(void);
+void greenMenu(void);
+void blueMenu(void);
 
 #endif /* MENU_H_ */
