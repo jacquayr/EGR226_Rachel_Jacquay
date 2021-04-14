@@ -28,6 +28,7 @@ void red(void) {
     sum = 0;
     push = 0;
     flag = 0;
+    redSum = 0;
 
     redMenu();          // tell user to press 3 buttons (000-100)
     flag = 1;           // read keypad 3x
@@ -81,6 +82,16 @@ void red(void) {
 
     if (sum >= 100) {
         sum = 100;
+    }
+
+    redSum = sum;
+
+    if (redSum != 0) {      // if DC is not zero
+        redOn = 1;          // tell user that red is ON
+    }
+
+    if (redSum == 0) {      // if DC is zero
+        redOn = 0;          // tell user that red is OFF
     }
 
     TIMER_A2->CCR[1] = 300 * sum;                         // set duty cycle
@@ -160,6 +171,16 @@ void green(void) {
         sum = 100;
     }
 
+    greenSum = sum;
+
+    if (greenSum != 0) {      // if DC is not zero
+        greenOn = 1;          // tell user that red is ON
+    }
+
+    if (greenSum == 0) {      // if DC is zero
+        greenOn = 0;          // tell user that red is OFF
+    }
+
     TIMER_A0->CCR[3] = 300 * sum;                         // set duty cycle
 }
 
@@ -235,6 +256,16 @@ void blue(void) {
 
     if (sum >= 100) {
         sum = 100;
+    }
+
+    blueSum = sum;
+
+    if (blueSum != 0) {      // if DC is not zero
+        blueOn = 1;          // tell user that red is ON
+    }
+
+    if (blueSum == 0) {      // if DC is zero
+        blueOn = 0;          // tell user that red is OFF
     }
 
     TIMER_A2->CCR[3] = 300 * sum;                         // set duty cycle

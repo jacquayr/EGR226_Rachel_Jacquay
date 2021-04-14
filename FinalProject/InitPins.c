@@ -92,7 +92,7 @@ void Servo_init(void) {                                                         
     // TimerA 0.3 for P2.6
     TIMER_A0->CCTL[2] |= TIMER_A_CCTLN_OUTMOD_7;    // set to outmode 7
     TIMER_A0->CCR[2] = 9000;                        // set duty cycle
-    TIMER_A0->CTL = 0x0214;                        // set to SMCLK, up mode, clear TAR to start
+    //TIMER_A0->CTL = 0x0214;                        // set to SMCLK, up mode, clear TAR to start
 }
 
 /*--------------------------------------------------------------
@@ -115,7 +115,7 @@ void RGB_init(void) {
 
     TIMER_A0->CCTL[3] |= TIMER_A_CCTLN_OUTMOD_7;    // set to outmode 7
     TIMER_A0->CCR[3] = 0;                           // set duty cycle
-    TIMER_A0->CTL |= 0x0214;                        // set to SMCLK, up mode, clear TAR to start
+    //TIMER_A0->CTL |= 0x0214;                        // set to SMCLK, up mode, clear TAR to start
 
     P5->SEL0 |= BIT6;
     P5->SEL1 &= ~BIT6;
@@ -132,5 +132,5 @@ void RGB_init(void) {
 
     TIMER_A2->CCTL[3] |= TIMER_A_CCTLN_OUTMOD_7;    // set to outmode 7
     TIMER_A2->CCR[3] = 0;                           // set duty cycle
-    TIMER_A2->CTL |= 0x0214;                        // set to SMCLK, up mode, clear TAR to start
+    //TIMER_A2->CTL |= 0x0214;                        // set to SMCLK, up mode, clear TAR to start
 }

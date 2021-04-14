@@ -1,0 +1,24 @@
+/*
+ * RGB.h
+ *
+ *  Created on: Apr 12, 2021
+ *      Author: rache
+ */
+
+#ifndef RGB_H_
+#define RGB_H_
+
+#include "msp.h"
+
+void red(void);
+void blue(void);
+void green(void);
+
+volatile uint8_t redPWM;
+volatile uint8_t greenPWM;
+volatile uint8_t bluePWM;
+volatile uint8_t redOn;
+volatile uint8_t greenOn;
+volatile uint8_t blueOn;
+
+#endif /* RGB_H_ */
