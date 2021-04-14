@@ -15,5 +15,6 @@ void DC_init(void);
 void Button_init(void);
 void Servo_init(void);
 void RGB_init(void);
+void ADCsetup(void);
 
 #endif /* INITPINS_H_ */

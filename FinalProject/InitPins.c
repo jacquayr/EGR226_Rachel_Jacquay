@@ -71,7 +71,7 @@ void Button_init(void) {
     P6->REN |= 0x30;        // enable resistor
     P6->OUT |= 0x30;        // enable pull up
     P6->IE |= 0x30;         // set pin interrupt to trigger when it goes from high -> low
-    P6->IES |= 0x30;        // enable interrupt for P6.1, P6.6, P6.7
+    P6->IES |= 0x30;        // enable interrupt for P6.4, P6.5
     P6->IFG = 0;            // set flag to 0
 }
 
@@ -84,15 +84,14 @@ void Button_init(void) {
  *
  * Outputs:         none
  *-------------------------------------------------------------*/
-void Servo_init(void) {                                                             // FIX THIS !!!!!!!!
+void Servo_init(void) {
     P2->SEL0 |= BIT5;   // configure P2.5 for PWM
     P2->SEL1 &= ~BIT5;
     P2->DIR |= BIT5;
 
-    // TimerA 0.3 for P2.6
+    // TimerA 0.2 for P2.5
     TIMER_A0->CCTL[2] |= TIMER_A_CCTLN_OUTMOD_7;    // set to outmode 7
     TIMER_A0->CCR[2] = 9000;                        // set duty cycle
-    //TIMER_A0->CTL = 0x0214;                        // set to SMCLK, up mode, clear TAR to start
 }
 
 /*--------------------------------------------------------------
@@ -115,7 +114,6 @@ void RGB_init(void) {
 
     TIMER_A0->CCTL[3] |= TIMER_A_CCTLN_OUTMOD_7;    // set to outmode 7
     TIMER_A0->CCR[3] = 0;                           // set duty cycle
-    //TIMER_A0->CTL |= 0x0214;                        // set to SMCLK, up mode, clear TAR to start
 
     P5->SEL0 |= BIT6;
     P5->SEL1 &= ~BIT6;
@@ -132,5 +130,56 @@ void RGB_init(void) {
 
     TIMER_A2->CCTL[3] |= TIMER_A_CCTLN_OUTMOD_7;    // set to outmode 7
     TIMER_A2->CCR[3] = 0;                           // set duty cycle
-    //TIMER_A2->CTL |= 0x0214;                        // set to SMCLK, up mode, clear TAR to start
+}
+
+/*--------------------------------------------------------------
+ * Function:        ADCsetup
+ *
+ * Description:     This function sets up the pin 5.5 for ADC
+ *                  and also sets up the ADC in the MSP432 for
+ *                  use.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void ADCsetup(void) {
+    ADC14->CTL0 = 0x00000010;       // power on & disabled during config
+    ADC14->CTL0 |= 0x04D80300;      // S/H pulse mode, MCLK, 32 sample clocks, SW trigger, /4 clock divide
+
+    ADC14->CTL1 = 0x00000030;       // 14-bit resolution
+    ADC14->MCTL[5] = 0;             // A0 input, single ended, vref = avcc
+
+    P8->SEL1 |= BIT4;               // configure P5.5 for AO
+    P8->SEL0 |= BIT4;
+
+    ADC14->CTL1 |= 0x00050000;      // start converting at mem reg 5
+    ADC14->CTL0 |= 2;               // enable ADC after config
+}
+
+/*--------------------------------------------------------------
+ * Function:        Back_init()
+ *
+ * Description:     This function initializes P7.7 with GPIO
+ *                  interrupts.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void Back_init(void) {
+    // backlight = P7.7
+    P7->SEL0 &= ~BIT7;      // set as simple I/O
+    P7->SEL1 &= ~BIT7;
+    P7->DIR &= ~BIT7;       // set as input
+    P7->REN |= BIT7;        // enable resistor
+    P7->OUT |= BIT7;        // enable pull up
+    P7->IE |= BIT7;         // set pin interrupt to trigger when it goes from high -> low
+    P7->IES |= BIT7;        // enable interrupt for P7.7
+    P7->IFG = 0;            // set flag to 0
+
+    TIMER_A1->CCR[0] = 30000;                           // set duty cycle
+    TIMER_A1->CCTL[1] |= TIMER_A_CCTLN_OUTMOD_7;        // set to outmode 7
+    TIMER_A1->CCR[1] = 0;                               // set duty cycle
+    TIMER_A1->CTL |= 0x0214;                            // set to SMCLK, up mode, clear TAR to start
 }
