@@ -392,15 +392,6 @@ void PORT6_IRQHandler(void) {
     P6->IFG &= ~0x30;       // reset interrupt flag
 }
 
-/*--------------------------------------------------------------
- * Function:
- *
- * Description:
- *
- * Inputs:          none
- *
- * Outputs:         none
- *-------------------------------------------------------------*/
 void password(void) {
     int p1, p2, p3, sum, push, flag;
     p1 = 0;
@@ -469,15 +460,6 @@ void password(void) {
     userEnter = sum;
 }
 
-/*--------------------------------------------------------------
- * Function:
- *
- * Description:
- *
- * Inputs:          none
- *
- * Outputs:         none
- *-------------------------------------------------------------*/
 void createP(void) {
     int p1, p2, p3, sum, push, flag;
     p1 = 0;
@@ -546,25 +528,16 @@ void createP(void) {
     created = sum;
 }
 
-/*--------------------------------------------------------------
- * Function:
- *
- * Description:
- *
- * Inputs:          none
- *
- * Outputs:         none
- *-------------------------------------------------------------*/
 void PORT3_IRQHandler(void) {
     if (P3->IFG & BIT7) {       // if port 6 interrupts were changed and the flag was set
-        TIMER_A3->CCR[0] = 600;
-        TIMER_A3->CCR[1] = 300;
+        TIMER_A3->CCR[0] = 1500;
+        TIMER_A3->CCR[1] = 750;
         SysTick_Delay(200);
         TIMER_A3->CCR[1] = 0;
         SysTick_Delay(100);
 
-        TIMER_A3->CCR[0] = 800;
-        TIMER_A3->CCR[1] = 400;
+        TIMER_A3->CCR[0] = 750;
+        TIMER_A3->CCR[1] = 375;
         SysTick_Delay(400);
         TIMER_A3->CCR[1] = 0;
 

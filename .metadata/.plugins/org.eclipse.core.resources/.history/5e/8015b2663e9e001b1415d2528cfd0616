@@ -557,14 +557,14 @@ void createP(void) {
  *-------------------------------------------------------------*/
 void PORT3_IRQHandler(void) {
     if (P3->IFG & BIT7) {       // if port 6 interrupts were changed and the flag was set
-        TIMER_A3->CCR[0] = 600;
-        TIMER_A3->CCR[1] = 300;
+        TIMER_A3->CCR[0] = 800;
+        TIMER_A3->CCR[1] = 400;
         SysTick_Delay(200);
         TIMER_A3->CCR[1] = 0;
         SysTick_Delay(100);
 
-        TIMER_A3->CCR[0] = 800;
-        TIMER_A3->CCR[1] = 400;
+        TIMER_A3->CCR[0] = 400;
+        TIMER_A3->CCR[1] = 200;
         SysTick_Delay(400);
         TIMER_A3->CCR[1] = 0;
 
