@@ -20,6 +20,7 @@ RGB.obj: C:/ti/ccs930/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h
 RGB.obj: C:/ti/ccs930/ccs/ccs_base/arm/include/system_msp432p401r.h
 RGB.obj: ../Keypad.h
 RGB.obj: ../Menu.h
+RGB.obj: ../Backlight.h
 
 ../RGB.c: 
 ../RGB.h: 
@@ -41,3 +42,4 @@ C:/ti/ccs930/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h:
 C:/ti/ccs930/ccs/ccs_base/arm/include/system_msp432p401r.h: 
 ../Keypad.h: 
 ../Menu.h: 
+../Backlight.h: 

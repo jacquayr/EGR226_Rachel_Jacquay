@@ -19,16 +19,16 @@
  *-------------------------------------------------------------*/
 void LED_init(void) {
     // red LED = P1.0
-    P1->SEL0 &= ~BIT0;
+    P1->SEL0 &= ~BIT0;      // set up simple GPIO
     P1->SEL1 &= ~BIT0;
-    P1->DIR |= BIT0;
-    P1->OUT |= BIT0;
+    P1->DIR |= BIT0;        // output
+    P1->OUT |= BIT0;        // on
 
     // green LED = P2.1
-    P2->SEL0 &= ~BIT1;
+    P2->SEL0 &= ~BIT1;      // set up simple GPIO
     P2->SEL1 &= ~BIT1;
-    P2->DIR |= BIT1;
-    P2->OUT &= ~BIT1;
+    P2->DIR |= BIT1;        // output
+    P2->OUT &= ~BIT1;       // off
 }
 
 /*--------------------------------------------------------------
@@ -85,7 +85,7 @@ void Button_init(void) {
  * Outputs:         none
  *-------------------------------------------------------------*/
 void Servo_init(void) {
-    P2->SEL0 |= BIT5;   // configure P2.5 for PWM
+    P2->SEL0 |= BIT5;       // configure P2.5 for PWM
     P2->SEL1 &= ~BIT5;
     P2->DIR |= BIT5;
 
@@ -108,14 +108,14 @@ void RGB_init(void) {
     // red LED = P5.6 --> TIMER A 2.1
     // blue LED = P6.6 --> TIMER A 2.3
 
-    P2->SEL0 |= BIT6;
+    P2->SEL0 |= BIT6;       // configure P2.6 for PWM
     P2->SEL1 &= ~BIT6;
     P2->DIR |= BIT6;
 
     TIMER_A0->CCTL[3] |= TIMER_A_CCTLN_OUTMOD_7;    // set to outmode 7
     TIMER_A0->CCR[3] = 0;                           // set duty cycle
 
-    P5->SEL0 |= BIT6;
+    P5->SEL0 |= BIT6;       // configure P5.6 for PWM
     P5->SEL1 &= ~BIT6;
     P5->DIR |= BIT6;
 
@@ -124,7 +124,7 @@ void RGB_init(void) {
     TIMER_A2->CCR[1] = 0;                           // set duty cycle
     TIMER_A2->CTL |= 0x0214;                        // set to SMCLK, up mode, clear TAR to start
 
-    P6->SEL0 |= BIT6;
+    P6->SEL0 |= BIT6;       // configure P6.6 for PWM
     P6->SEL1 &= ~BIT6;
     P6->DIR |= BIT6;
 
@@ -144,14 +144,14 @@ void RGB_init(void) {
  *-------------------------------------------------------------*/
 void Back_init(void) {
     // backlight = P7.7
-    P7->SEL0 |= BIT7;      // set as simple I/O
+    P7->SEL0 |= BIT7;      // set as PWM
     P7->SEL1 &= ~BIT7;
-    P7->DIR |= BIT7;       // set as input
+    P7->DIR |= BIT7;       // set as output
 
     TIMER_A1->CCR[0] |= 1000;                          // set period amount
-    TIMER_A1->CCTL[1] |= TIMER_A_CCTLN_OUTMOD_7;        // set to outmode 7
-    TIMER_A1->CCR[1] = 1000;                           // set duty cycle
-    TIMER_A1->CTL |= 0x0214;                            // set to SMCLK, up mode, clear TAR to start
+    TIMER_A1->CCTL[1] |= TIMER_A_CCTLN_OUTMOD_7;       // set to outmode 7
+    TIMER_A1->CCR[1] = 750;                            // set duty cycle
+    TIMER_A1->CTL |= 0x0214;                           // set to SMCLK, up mode, clear TAR to start
 }
 
 /*--------------------------------------------------------------
@@ -177,4 +177,44 @@ void ADCsetup(void) {
 
     ADC14->CTL1 |= 0x00050000;      // start converting at mem reg 5
     ADC14->CTL0 |= 2;               // enable ADC after config
+}
+
+/*--------------------------------------------------------------
+ * Function:
+ *
+ * Description:
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void Sounder_init(void) {
+    P10->SEL0 |= BIT5;      // set as PWM
+    P10->SEL1 &= ~BIT5;
+    P10->DIR |= BIT5;       // set as output
+
+    TIMER_A3->CCR[0] |= 1500;                          // set period amount
+    TIMER_A3->CCTL[1] |= TIMER_A_CCTLN_OUTMOD_7;       // set to outmode 7
+    TIMER_A3->CCR[1] = 0;                           // set duty cycle
+    TIMER_A3->CTL |= 0x0214;                           // set to SMCLK, up mode, clear TAR to start
+}
+
+/*--------------------------------------------------------------
+ * Function:
+ *
+ * Description:
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void Touch_init(void) {
+    P3->SEL0 &= ~BIT7;      // set as simple I/O
+    P3->SEL1 &= ~BIT7;
+    P3->DIR &= ~BIT7;       // set as input
+    P3->REN |= BIT7;        // enable resistor
+    P3->OUT |= BIT7;        // enable pull up
+    P3->IE |= BIT7;         // set pin interrupt to trigger when it goes from high -> low
+    P3->IES |= BIT7;        // enable interrupt for P6.4, P6.5
+    P3->IFG = 0;            // set flag to 0
 }

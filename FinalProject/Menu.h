@@ -12,10 +12,13 @@
 
 void mainMenu(void);
 void doorMenu(void);
+void armUnarm(void);
 void motorMenu(void);
 void lightsMenu(void);
 void redMenu(void);
 void greenMenu(void);
 void blueMenu(void);
+void passcode(void);
+void firstPasscode(void);
 
 #endif /* MENU_H_ */

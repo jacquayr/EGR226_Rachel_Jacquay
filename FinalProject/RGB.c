@@ -8,6 +8,7 @@
 #include "RGB.h"
 #include "Keypad.h"
 #include "Menu.h"
+#include "Backlight.h"
 
 /*--------------------------------------------------------------
  * Function:        red
@@ -31,18 +32,18 @@ void red(void) {
     redSum = 0;
 
     redMenu();          // tell user to press 3 buttons (000-100)
-    flag = 1;           // read keypad 3x
+    flag = 1;
 
     while (flag) {
-        updateBL();
+        changeBL();     // update backlight
 
-        push = Read_Keypad();
+        push = Read_Keypad();   // read keypad
 
-        if (push) {
-            if (num == 10 | num == 11 | num == 12) {
-                num = 0;
+        if (push) {                                     // if key is pressed
+            if (num == 10 | num == 11 | num == 12) {    // if num is * 0 #
+                num = 0;                                // num is 0
             }
-            p1 = num;
+            p1 = num;           // push 1 is num
             push = 0;
             flag = 0;
         }
@@ -51,15 +52,15 @@ void red(void) {
     flag = 1;
 
     while (flag) {
-        updateBL();
+        changeBL();     // update backlight
 
-        push = Read_Keypad();
+        push = Read_Keypad();   // read keypad
 
-        if (push) {
-            if (num == 10 | num == 11 | num == 12) {
-                num = 0;
+        if (push) {                                     // if key is pressed
+            if (num == 10 | num == 11 | num == 12) {    // if num is * 0 #
+                num = 0;                                // num is 0
             }
-            p2 = num;
+            p2 = num;           // push 2 is num
             push = 0;
             flag = 0;
         }
@@ -68,11 +69,11 @@ void red(void) {
     flag = 1;
 
     while (flag) {
-        updateBL();
+        changeBL();     // update backlight
 
-        push = Read_Keypad();
+        push = Read_Keypad();   // read keypad
 
-        if (push) {
+        if (push) {                                     // if key is pressed
             if (num == 10 | num == 11 | num == 12) {
                 num = 0;
             }
@@ -124,14 +125,14 @@ void green(void) {
     flag = 0;
 
     greenMenu();        // tell user to press 3 buttons (000-100)
-    flag = 1;           // read keypad 3x
+    flag = 1;
 
     while (flag) {
-        updateBL();
+        changeBL();
 
         push = Read_Keypad();
 
-        if (push) {
+        if (push) {                                     // if key is pressed
             if (num == 10 | num == 11 | num == 12) {
                 num = 0;
             }
@@ -144,11 +145,11 @@ void green(void) {
     flag = 1;
 
     while (flag) {
-        updateBL();
+        changeBL();
 
         push = Read_Keypad();
 
-        if (push) {
+        if (push) {                                     // if key is pressed
             if (num == 10 | num == 11 | num == 12) {
                 num = 0;
             }
@@ -161,11 +162,11 @@ void green(void) {
     flag = 1;
 
     while (flag) {
-        updateBL();
+        changeBL();
 
         push = Read_Keypad();
 
-        if (push) {
+        if (push) {                                     // if key is pressed
             if (num == 10 | num == 11 | num == 12) {
                 num = 0;
             }
@@ -220,11 +221,11 @@ void blue(void) {
     flag = 1;           // read keypad 3x
 
     while (flag) {
-        updateBL();
+        changeBL();
 
         push = Read_Keypad();
 
-        if (push) {
+        if (push) {                                     // if key is pressed
             if (num == 10 | num == 11 | num == 12) {
                 num = 0;
             }
@@ -237,11 +238,11 @@ void blue(void) {
     flag = 1;
 
     while (flag) {
-        updateBL();
+        changeBL();
 
         push = Read_Keypad();
 
-        if (push) {
+        if (push) {                                     // if key is pressed
             if (num == 10 | num == 11 | num == 12) {
                 num = 0;
             }
@@ -254,11 +255,11 @@ void blue(void) {
     flag = 1;
 
     while (flag) {
-        updateBL();
+        changeBL();
 
         push = Read_Keypad();
 
-        if (push) {
+        if (push) {                                     // if key is pressed
             if (num == 10 | num == 11 | num == 12) {
                 num = 0;
             }
@@ -287,23 +288,4 @@ void blue(void) {
     }
 
     TIMER_A2->CCR[3] = 300 * sum;                         // set duty cycle
-}
-
-/*--------------------------------------------------------------
- * Function:        changeBL
- *
- * Description:     This function changes the backlight of the
- *                  LCD.
- *
- * Inputs:          none
- *
- * Outputs:         none
- *-------------------------------------------------------------*/
-void updateBL(void) {
-    float result = 0.0;
-
-    ADC14->CTL0 |= 1;               // start conversion
-    while(!ADC14->IFGR0);           // wait until conversion is complete
-    result = ADC14->MEM[5];         // immediately store value in variable
-    TIMER_A1->CCR[1] = result * 0.0609;                               // set duty cycle
 }

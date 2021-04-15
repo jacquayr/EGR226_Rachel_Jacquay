@@ -71,6 +71,55 @@ void doorMenu(void) {
     char first[16] = "Door Menu:      ";
     char second[16] = "[1] Open Door   ";
     char third[16] = "[2] Close Door  ";
+    char fourth[16] = "[3] Arm / Unarm ";
+
+    commandWrite(0x80);             // send cursor to first line
+    delay_milli(10);                // delay 10 ms
+
+    for (i = 0; i < 16; i++) {
+        dataWrite(first[i]);        // print out each letter
+        delay_milli(10);            // delay 10 ms
+    }
+
+    commandWrite(0xC0);             // send cursor to second line
+    delay_milli(10);                // delay 10 ms
+
+    for (i = 0; i < 16; i++) {
+        dataWrite(second[i]);       // print out each letter
+        delay_milli(10);            // delay 10 ms
+    }
+
+    commandWrite(0x90);             // send cursor to third line
+    delay_milli(10);                // delay 10 ms
+
+    for (i = 0; i < 16; i++) {
+        dataWrite(third[i]);        // print out each letter
+        delay_milli(10);            // delay 10 ms
+    }
+
+    commandWrite(0xD0);             // send cursor to fourth line
+    delay_milli(10);                // delay 10 ms
+
+    for (i = 0; i < 16; i++) {
+        dataWrite(fourth[i]);       // print out each letter
+        delay_milli(10);            // delay 10 ms
+    }
+}
+
+/*--------------------------------------------------------------
+ * Function:        armDoor
+ *
+ * Description:     This function shows the arm door menu screen.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void armUnarm(void) {
+    int i;
+    char first[16] = "Arm / Unarm:    ";
+    char second[16] = "[1] Arm Door    ";
+    char third[16] = "[2] Unarm Door  ";
     char fourth[16] = "                ";
 
     commandWrite(0x80);             // send cursor to first line
@@ -119,8 +168,8 @@ void motorMenu(void) {
     int i;
     char first[16] = "Motor Menu:     ";
     char second[16] = "[0-9] 0%-90%    ";
-    char third[16] = "Red Button =    ";
-    char fourth[16] = "Emergency Stop  ";
+    char third[16] = "[*] 100%        ";
+    char fourth[16] = "                ";
 
     commandWrite(0x80);             // send cursor to first line
     delay_milli(10);                // delay 10 ms
@@ -317,6 +366,106 @@ void greenMenu(void) {
     char second[16] = "Enter 3 digits  ";
     char third[16] = "                ";
     char fourth[16] = "                ";
+
+    commandWrite(0x80);             // send cursor to first line
+    delay_milli(10);                // delay 10 ms
+
+    for (i = 0; i < 16; i++) {
+        dataWrite(first[i]);        // print out each letter
+        delay_milli(10);            // delay 10 ms
+    }
+
+    commandWrite(0xC0);             // send cursor to second line
+    delay_milli(10);                // delay 10 ms
+
+    for (i = 0; i < 16; i++) {
+        dataWrite(second[i]);       // print out each letter
+        delay_milli(10);            // delay 10 ms
+    }
+
+    commandWrite(0x90);             // send cursor to third line
+    delay_milli(10);                // delay 10 ms
+
+    for (i = 0; i < 16; i++) {
+        dataWrite(third[i]);        // print out each letter
+        delay_milli(10);            // delay 10 ms
+    }
+
+    commandWrite(0xD0);             // send cursor to third line
+    delay_milli(10);                // delay 10 ms
+
+    for (i = 0; i < 16; i++) {
+        dataWrite(fourth[i]);        // print out each letter
+        delay_milli(10);            // delay 10 ms
+    }
+}
+
+/*--------------------------------------------------------------
+ * Function:        passcode
+ *
+ * Description:     This function tells the user to enter a
+ *                  3-digit passcode.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void passcode(void) {
+    int i;
+    char first[16] = "Enter 3-digit   ";
+    char second[16] = "Passcode        ";
+    char third[16] = "                ";
+    char fourth[16] = "                ";
+
+    commandWrite(0x80);             // send cursor to first line
+    delay_milli(10);                // delay 10 ms
+
+    for (i = 0; i < 16; i++) {
+        dataWrite(first[i]);        // print out each letter
+        delay_milli(10);            // delay 10 ms
+    }
+
+    commandWrite(0xC0);             // send cursor to second line
+    delay_milli(10);                // delay 10 ms
+
+    for (i = 0; i < 16; i++) {
+        dataWrite(second[i]);       // print out each letter
+        delay_milli(10);            // delay 10 ms
+    }
+
+    commandWrite(0x90);             // send cursor to third line
+    delay_milli(10);                // delay 10 ms
+
+    for (i = 0; i < 16; i++) {
+        dataWrite(third[i]);        // print out each letter
+        delay_milli(10);            // delay 10 ms
+    }
+
+    commandWrite(0xD0);             // send cursor to third line
+    delay_milli(10);                // delay 10 ms
+
+    for (i = 0; i < 16; i++) {
+        dataWrite(fourth[i]);        // print out each letter
+        delay_milli(10);            // delay 10 ms
+    }
+}
+
+/*--------------------------------------------------------------
+ * Function:        passcode
+ *
+ * Description:     This function tells the user to enter a
+ *                  3-digit passcode.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void firstPasscode(void) {
+    int i;
+    char first[16] = "Please create a ";
+    char second[16] = "3-digit password";
+    char third[16] = "to arm / unarm  ";
+    char fourth[16] = "the door        ";
 
     commandWrite(0x80);             // send cursor to first line
     delay_milli(10);                // delay 10 ms

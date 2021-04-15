@@ -17,5 +17,7 @@ void Servo_init(void);
 void RGB_init(void);
 void ADCsetup(void);
 void Back_init(void);
+void Sounder_init(void);
+void Touch_init(void);
 
 #endif /* INITPINS_H_ */
