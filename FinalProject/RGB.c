@@ -34,6 +34,8 @@ void red(void) {
     flag = 1;           // read keypad 3x
 
     while (flag) {
+        updateBL();
+
         push = Read_Keypad();
 
         if (push) {
@@ -49,6 +51,8 @@ void red(void) {
     flag = 1;
 
     while (flag) {
+        updateBL();
+
         push = Read_Keypad();
 
         if (push) {
@@ -64,6 +68,8 @@ void red(void) {
     flag = 1;
 
     while (flag) {
+        updateBL();
+
         push = Read_Keypad();
 
         if (push) {
@@ -121,6 +127,8 @@ void green(void) {
     flag = 1;           // read keypad 3x
 
     while (flag) {
+        updateBL();
+
         push = Read_Keypad();
 
         if (push) {
@@ -136,6 +144,8 @@ void green(void) {
     flag = 1;
 
     while (flag) {
+        updateBL();
+
         push = Read_Keypad();
 
         if (push) {
@@ -151,6 +161,8 @@ void green(void) {
     flag = 1;
 
     while (flag) {
+        updateBL();
+
         push = Read_Keypad();
 
         if (push) {
@@ -208,6 +220,8 @@ void blue(void) {
     flag = 1;           // read keypad 3x
 
     while (flag) {
+        updateBL();
+
         push = Read_Keypad();
 
         if (push) {
@@ -223,6 +237,8 @@ void blue(void) {
     flag = 1;
 
     while (flag) {
+        updateBL();
+
         push = Read_Keypad();
 
         if (push) {
@@ -238,6 +254,8 @@ void blue(void) {
     flag = 1;
 
     while (flag) {
+        updateBL();
+
         push = Read_Keypad();
 
         if (push) {
@@ -269,4 +287,23 @@ void blue(void) {
     }
 
     TIMER_A2->CCR[3] = 300 * sum;                         // set duty cycle
+}
+
+/*--------------------------------------------------------------
+ * Function:        changeBL
+ *
+ * Description:     This function changes the backlight of the
+ *                  LCD.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void updateBL(void) {
+    float result = 0.0;
+
+    ADC14->CTL0 |= 1;               // start conversion
+    while(!ADC14->IFGR0);           // wait until conversion is complete
+    result = ADC14->MEM[5];         // immediately store value in variable
+    TIMER_A1->CCR[1] = result * 0.0609;                               // set duty cycle
 }

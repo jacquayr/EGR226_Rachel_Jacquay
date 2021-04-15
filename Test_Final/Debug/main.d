@@ -17,12 +17,17 @@ main.obj: C:/ti/ccs930/ccs/ccs_base/arm/include/CMSIS/core_cm4.h
 main.obj: C:/ti/ccs930/ccs/ccs_base/arm/include/CMSIS/cmsis_compiler.h
 main.obj: C:/ti/ccs930/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h
 main.obj: C:/ti/ccs930/ccs/ccs_base/arm/include/system_msp432p401r.h
-main.obj: ../SysTick.h
 main.obj: ../Keypad.h
+main.obj: ../LCD.h
+main.obj: ../SysTick.h
+main.obj: ../Menu.h
+main.obj: ../InitPins.h
+main.obj: ../RGB.h
 main.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdio.h
 main.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/_ti_config.h
 main.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/linkage.h
 main.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdarg.h
+main.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdlib.h
 
 ../main.c: 
 C:/ti/ccs930/ccs/ccs_base/arm/include/msp.h: 
@@ -41,9 +46,14 @@ C:/ti/ccs930/ccs/ccs_base/arm/include/CMSIS/core_cm4.h:
 C:/ti/ccs930/ccs/ccs_base/arm/include/CMSIS/cmsis_compiler.h: 
 C:/ti/ccs930/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h: 
 C:/ti/ccs930/ccs/ccs_base/arm/include/system_msp432p401r.h: 
-../SysTick.h: 
 ../Keypad.h: 
+../LCD.h: 
+../SysTick.h: 
+../Menu.h: 
+../InitPins.h: 
+../RGB.h: 
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdio.h: 
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/_ti_config.h: 
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/linkage.h: 
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdarg.h: 
+C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdlib.h: 

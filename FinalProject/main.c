@@ -20,8 +20,8 @@
 
 void changeState(void);
 void PORT6_IRQHandler(void);
-void PORT8_IRQHandler(void);
 void debounce(void);
+void changeBL(void);
 
 uint8_t state, buttonflag;
 
@@ -29,7 +29,6 @@ void main(void)
 {
     __disable_irq();
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
-
     SysTick_Init();                                 // inits
     Pin_Init();         // HAS TO GO BEFORE LCD INIT
     LCD_Init();
@@ -39,10 +38,10 @@ void main(void)
     Button_init();
     Servo_init();
     RGB_init();
+    Back_init();
     ADCsetup();
 
     NVIC_EnableIRQ(PORT6_IRQn);                     // NVIC call for buttons
-    //NVIC_EnableIRQ(PORT8_IRQn);
     __enable_irq();
 
     commandWrite(0x01);     // clear screen
@@ -54,6 +53,7 @@ void main(void)
     state = 0;
 
     while(1) {
+        changeBL();
         changeState();
     }
 }
@@ -78,6 +78,8 @@ void changeState(void) {
         flag = 1;
 
         while (flag) {
+            changeBL();
+
             push = Read_Keypad();
 
             if (push) {
@@ -114,10 +116,12 @@ void changeState(void) {
         flag = 1;
 
         while (flag) {
+            changeBL();
+
             push = Read_Keypad();
 
             if (push) {
-                if (num == 1) {         // open door
+                if (num == 1) {    // open door
                     state = 2;
                     flag = 0;
                     push = 0;
@@ -163,6 +167,8 @@ void changeState(void) {
         flag = 1;
 
         while (flag) {
+            changeBL();
+
             push = Read_Keypad();
 
             if (push) {
@@ -201,6 +207,8 @@ void changeState(void) {
         flag = 1;
 
         while (flag) {
+            changeBL();
+
             push = Read_Keypad();
 
             if (push) {
@@ -274,6 +282,8 @@ void PORT6_IRQHandler(void) {
         debounce();             // call debounce function
 
         while (buttonflag == 1) {                         // do while button flag is set from debounce function
+            changeBL();
+
             if ((P6->IN & BIT4) != BIT4) {          // if red button is pressed
                 TIMER_A0->CCR[4] = 0;               // set duty cycle
             }
@@ -318,37 +328,20 @@ void PORT6_IRQHandler(void) {
 }
 
 /*--------------------------------------------------------------
- * Function:        PORT6_IRQHandler
+ * Function:        changeBL
  *
- * Description:     This function deals with the GPIO interrupt
- *                  and calls the debounce function, then checks
- *                  if any of buttons are pressed, and acts
- *                  accordingly.
+ * Description:     This function changes the backlight of the
+ *                  LCD.
  *
  * Inputs:          none
  *
  * Outputs:         none
  *-------------------------------------------------------------*/
-void PORT8_IRQHandler(void) {
-    // pot = P7.7
-    // mosfet = P8.4
-
+void changeBL(void) {
     float result = 0.0;
-    float voltage = 0.0;
 
-    // CHECK TO SEE THAT HANDLER WAS MEANT TO BE CALLED
-
-    if (P8->IFG & BIT4) {               // if port 7 interrupts were changed and the flag was set
-        ADC14->CTL0 |= 1;               // start conversion
-        while(!ADC14->IFGR0);           // wait until conversion is complete
-        result = ADC14->MEM[5];         // immediately store value in variable
-        voltage = result * 0.0002;
-
-        printf("ADC value is: \n\t %.0lf\n", result);       // print ADC value
-        printf("Voltage is: \n\t %.2lf\n", voltage);        // print voltage value
-
-        SysTick_Delay(500);                         // delay 500 ms
-    }
-
-    P8->IFG &= ~BIT4;       // reset interrupt flag
+    ADC14->CTL0 |= 1;               // start conversion
+    while(!ADC14->IFGR0);           // wait until conversion is complete
+    result = ADC14->MEM[5];         // immediately store value in variable
+    TIMER_A1->CCR[1] = result * 0.0609;                               // set duty cycle
 }

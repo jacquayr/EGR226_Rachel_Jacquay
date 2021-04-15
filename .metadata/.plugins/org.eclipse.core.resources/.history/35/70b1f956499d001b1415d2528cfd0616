@@ -1,0 +1,102 @@
+/*-----------------------------------------------------------------------------------------
+ * Author:          Rachel Jacquay
+ * Course:          EGR 226-902
+ * Date:            03/17/2021
+ * Project:         Lab 8 Part 3
+ * File:            main_part3.c
+ * Description:     This program uses Timer A, an Octocoupler, and the keypad to create
+ *                  a pseudo PWM analog voltage for the DC motor. The speed of the motor
+ *                  was changed by the input of the keypad, which then changed the duty
+ *                  cycle of Timer A, which then made the motor slow down or speed up.
+-----------------------------------------------------------------------------------------*/
+
+// libraries
+#include "msp.h"
+#include "SysTick.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+// function prototypes
+void pin_init(void);
+void T32_INT2_IRQHandler(void);
+void ADCsetup(void);
+
+void main(void)
+{
+    __disable_irq();
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
+    pin_init();                                     // initializations
+    SysTick_Init();
+    ADCsetup();
+    TIMER32_2->CONTROL = 0b11100011; //Sets timer 2 for Enabled, Periodic, With Interrupt, No Prescale, 32 bit mode, One Shot Mode. See 589 / reference manual
+
+    NVIC_EnableIRQ (T32_INT1_IRQn);                 // NVIC call for backlight
+    __enable_irq();
+
+    TIMER32_2->LOAD = 1500;
+
+    while(1) {
+
+    }
+}
+
+/*--------------------------------------------------------------
+ * Function:        ADCsetup
+ *
+ * Description:     This function sets up the pin 5.5 for ADC
+ *                  and also sets up the ADC in the MSP432 for
+ *                  use.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void ADCsetup(void) {
+    ADC14->CTL0 = 0x00000010;       // power on & disabled during config
+    ADC14->CTL0 |= 0x04D80300;      // S/H pulse mode, MCLK, 32 sample clocks, SW trigger, /4 clock divide
+
+    ADC14->CTL1 = 0x00000030;       // 14-bit resolution
+    ADC14->MCTL[5] = 0;             // A0 input, single ended, vref = avcc
+
+    P8->SEL1 |= BIT4;               // configure P5.5 for AO
+    P8->SEL0 |= BIT4;
+
+    ADC14->CTL1 |= 0x00050000;      // start converting at mem reg 5
+    ADC14->CTL0 |= 2;               // enable ADC after config
+}
+
+/*--------------------------------------------------------------
+ * Function:        PORT6_IRQHandler
+ *
+ * Description:     This function deals with the GPIO interrupt
+ *                  and calls the debounce function, then checks
+ *                  if any of buttons are pressed, and acts
+ *                  accordingly.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void T32_INT2_IRQHandler(void) {
+    // pot = P7.7
+    // mosfet = P8.4
+
+    TIMER32_2->INTCLR = 1;              //Clear interrupt flag so it does not interrupt again immediately.
+
+    float result = 0.0;
+    float voltage = 0.0;
+
+    // CHECK TO SEE THAT HANDLER WAS MEANT TO BE CALLED
+
+    ADC14->CTL0 |= 1;               // start conversion
+    while(!ADC14->IFGR0);           // wait until conversion is complete
+    result = ADC14->MEM[5];         // immediately store value in variable
+    voltage = result * 0.0002;
+
+    printf("ADC value is: \n\t %.0lf\n", result);       // print ADC value
+    printf("Voltage is: \n\t %.2lf\n", voltage);        // print voltage value
+
+    SysTick_Delay(500);                         // delay 500 ms
+
+    TIMER32_2->LOAD = 1500;         //Set to a countdown of 0.5 second on 3 MHz clock
+}

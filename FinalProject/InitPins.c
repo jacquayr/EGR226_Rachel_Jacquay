@@ -133,6 +133,28 @@ void RGB_init(void) {
 }
 
 /*--------------------------------------------------------------
+ * Function:        Back_init()
+ *
+ * Description:     This function initializes P7.7 with GPIO
+ *                  interrupts.
+ *
+ * Inputs:          none
+ *
+ * Outputs:         none
+ *-------------------------------------------------------------*/
+void Back_init(void) {
+    // backlight = P7.7
+    P7->SEL0 |= BIT7;      // set as simple I/O
+    P7->SEL1 &= ~BIT7;
+    P7->DIR |= BIT7;       // set as input
+
+    TIMER_A1->CCR[0] |= 1000;                          // set period amount
+    TIMER_A1->CCTL[1] |= TIMER_A_CCTLN_OUTMOD_7;        // set to outmode 7
+    TIMER_A1->CCR[1] = 1000;                           // set duty cycle
+    TIMER_A1->CTL |= 0x0214;                            // set to SMCLK, up mode, clear TAR to start
+}
+
+/*--------------------------------------------------------------
  * Function:        ADCsetup
  *
  * Description:     This function sets up the pin 5.5 for ADC
@@ -150,36 +172,9 @@ void ADCsetup(void) {
     ADC14->CTL1 = 0x00000030;       // 14-bit resolution
     ADC14->MCTL[5] = 0;             // A0 input, single ended, vref = avcc
 
-    P8->SEL1 |= BIT4;               // configure P5.5 for AO
-    P8->SEL0 |= BIT4;
+    P5->SEL1 |= BIT5;               // configure P5.5 for AO
+    P5->SEL0 |= BIT5;
 
     ADC14->CTL1 |= 0x00050000;      // start converting at mem reg 5
     ADC14->CTL0 |= 2;               // enable ADC after config
-}
-
-/*--------------------------------------------------------------
- * Function:        Back_init()
- *
- * Description:     This function initializes P7.7 with GPIO
- *                  interrupts.
- *
- * Inputs:          none
- *
- * Outputs:         none
- *-------------------------------------------------------------*/
-void Back_init(void) {
-    // backlight = P7.7
-    P7->SEL0 &= ~BIT7;      // set as simple I/O
-    P7->SEL1 &= ~BIT7;
-    P7->DIR &= ~BIT7;       // set as input
-    P7->REN |= BIT7;        // enable resistor
-    P7->OUT |= BIT7;        // enable pull up
-    P7->IE |= BIT7;         // set pin interrupt to trigger when it goes from high -> low
-    P7->IES |= BIT7;        // enable interrupt for P7.7
-    P7->IFG = 0;            // set flag to 0
-
-    TIMER_A1->CCR[0] = 30000;                           // set duty cycle
-    TIMER_A1->CCTL[1] |= TIMER_A_CCTLN_OUTMOD_7;        // set to outmode 7
-    TIMER_A1->CCR[1] = 0;                               // set duty cycle
-    TIMER_A1->CTL |= 0x0214;                            // set to SMCLK, up mode, clear TAR to start
 }

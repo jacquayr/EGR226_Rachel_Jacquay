@@ -13,6 +13,7 @@
 void red(void);
 void blue(void);
 void green(void);
+void updateBL(void);
 
 volatile uint8_t redSum;
 volatile uint8_t greenSum;
