@@ -24,6 +24,8 @@ main.obj: ../Menu.h
 main.obj: ../InitPins.h
 main.obj: ../RGB.h
 main.obj: ../Backlight.h
+main.obj: ../Interrupt.h
+main.obj: ../Passcode.h
 main.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdlib.h
 main.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/_ti_config.h
 main.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/linkage.h
@@ -54,6 +56,8 @@ C:/ti/ccs930/ccs/ccs_base/arm/include/system_msp432p401r.h:
 ../InitPins.h: 
 ../RGB.h: 
 ../Backlight.h: 
+../Interrupt.h: 
+../Passcode.h: 
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdlib.h: 
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/_ti_config.h: 
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/linkage.h: 
