@@ -175,7 +175,7 @@ void changeState(void) {
         P1->OUT &= ~BIT0;   // green LED on, red LED off
         P2->OUT |= BIT1;
 
-        TIMER_A0->CCR[2] = 4500;    // move servo to open
+        TIMER_A0->CCR[2] = 3000;    // move servo to open
 
         state = 0;
         break;
