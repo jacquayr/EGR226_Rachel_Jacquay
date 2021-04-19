@@ -4,7 +4,11 @@
  * Date:            04/21/2021
  * Project:         Final Project
  * File:            main.c
- * Description:
+ * Description:     This is the final project of EGR 226. It requires the use of PWM,
+ *                  TIMER A, ADC, SysTick, LCD, interrupts, DC motor, servo motor,
+ *                  RGB LED, keypad, MOSFETs, optocouplers, and push buttons to make a
+ *                  running state machine that will interface to the world based on
+ *                  inputs from the user.
 -----------------------------------------------------------------------------------------*/
 
 // libraries
@@ -56,7 +60,7 @@ void main(void) {
     commandWrite(0x0C);     // turn cursor off
     delay_milli(10);        // delay 100 ms
 
-    alarm = 0;
+    alarm = 0;              // setting variables to 0 to start
     buttonflag = 0;
     created = 0;
     userEnter = 0;

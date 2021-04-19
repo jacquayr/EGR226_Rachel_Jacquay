@@ -53,7 +53,7 @@ void DC_init(void) {
 }
 
 /*--------------------------------------------------------------
- * Function:        button_init
+ * Function:        Button_init
  *
  * Description:     This function initializes the two buttons
  *                  with interrupts.
@@ -133,7 +133,7 @@ void RGB_init(void) {
 }
 
 /*--------------------------------------------------------------
- * Function:        Back_init()
+ * Function:        Back_init
  *
  * Description:     This function initializes P7.7 with GPIO
  *                  interrupts.
@@ -180,9 +180,10 @@ void ADCsetup(void) {
 }
 
 /*--------------------------------------------------------------
- * Function:
+ * Function:        Sounder_init
  *
- * Description:
+ * Description:     This function initializes the P10.5 with PWM
+ *                  for the Piezzo sounder.
  *
  * Inputs:          none
  *
@@ -200,9 +201,9 @@ void Sounder_init(void) {
 }
 
 /*--------------------------------------------------------------
- * Function:
+ * Function:        Touch_init
  *
- * Description:
+ * Description:     This function initializes the touch sensor.
  *
  * Inputs:          none
  *

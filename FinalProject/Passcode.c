@@ -10,9 +10,11 @@
 #include "Keypad.h"
 
 /*--------------------------------------------------------------
- * Function:
+ * Function:        password
  *
- * Description:
+ * Description:     This function takes in the three pushes given
+ *                  by the user and sets the new entry equal to
+ *                  the sum of the pushes.
  *
  * Inputs:          none
  *
@@ -31,15 +33,15 @@ void password(void) {
     flag = 1;           // read keypad 3x
 
     while (flag) {
-        changeBL();
+        changeBL();     // update backlight
 
-        push = Read_Keypad();
+        push = Read_Keypad();       // read keypad
 
         if (push) {                                     // if key is pressed
-            if (num == 10 | num == 11 | num == 12) {
-                num = 0;
+            if (num == 10 | num == 11 | num == 12) {    // if num pressed is * or 0 or #
+                num = 0;                                // num is 0
             }
-            p1 = num;
+            p1 = num;       // set press equal to num
             push = 0;
             flag = 0;
         }
@@ -48,15 +50,15 @@ void password(void) {
     flag = 1;
 
     while (flag) {
-        changeBL();
+        changeBL();     // update backlight
 
-        push = Read_Keypad();
+        push = Read_Keypad();       // read keypad
 
         if (push) {                                     // if key is pressed
-            if (num == 10 | num == 11 | num == 12) {
-                num = 0;
+            if (num == 10 | num == 11 | num == 12) {    // if num pressed is * or 0 or #
+                num = 0;                                // num is 0
             }
-            p2 = num;
+            p2 = num;       // set press equal to num
             push = 0;
             flag = 0;
         }
@@ -65,15 +67,15 @@ void password(void) {
     flag = 1;
 
     while (flag) {
-        changeBL();
+        changeBL();     // update backlight
 
-        push = Read_Keypad();
+        push = Read_Keypad();       // read keypad
 
         if (push) {                                     // if key is pressed
-            if (num == 10 | num == 11 | num == 12) {
-                num = 0;
+            if (num == 10 | num == 11 | num == 12) {    // if num pressed is * or 0 or #
+                num = 0;                                // num is 0
             }
-            p3 = num;
+            p3 = num;       // set press equal to num
             push = 0;
             flag = 0;
         }
@@ -81,15 +83,17 @@ void password(void) {
 
     p1 *= 100;
     p2 *= 10;
-    sum = p1 + p2 + p3;
+    sum = p1 + p2 + p3;     // create a sum to be compared later
 
-    userEnter = sum;
+    userEnter = sum;        // set current entry equal to sum
 }
 
 /*--------------------------------------------------------------
- * Function:
+ * Function:        createP
  *
- * Description:
+ * Description:     This function allows the user to create a
+ *                  3-digit password at the start up of the
+ *                  code.
  *
  * Inputs:          none
  *
@@ -108,15 +112,15 @@ void createP(void) {
     flag = 1;           // read keypad 3x
 
     while (flag) {
-        changeBL();
+        changeBL();     // update backlight
 
-        push = Read_Keypad();
+        push = Read_Keypad();       // read keypad
 
         if (push) {                                     // if key is pressed
-            if (num == 10 | num == 11 | num == 12) {
-                num = 0;
+            if (num == 10 | num == 11 | num == 12) {    // if num pressed is * or 0 or #
+                num = 0;                                // num is 0
             }
-            p1 = num;
+            p1 = num;       // set press equal to num
             push = 0;
             flag = 0;
         }
@@ -125,15 +129,15 @@ void createP(void) {
     flag = 1;
 
     while (flag) {
-        changeBL();
+        changeBL();     // update backlight
 
-        push = Read_Keypad();
+        push = Read_Keypad();       // read keypad
 
         if (push) {                                     // if key is pressed
-            if (num == 10 | num == 11 | num == 12) {
-                num = 0;
+            if (num == 10 | num == 11 | num == 12) {    // if num pressed is * or 0 or #
+                num = 0;                                // num is 0
             }
-            p2 = num;
+            p2 = num;       // set press equal to num
             push = 0;
             flag = 0;
         }
@@ -142,15 +146,15 @@ void createP(void) {
     flag = 1;
 
     while (flag) {
-        changeBL();
+        changeBL();     // update backlight
 
-        push = Read_Keypad();
+        push = Read_Keypad();       // read keypad
 
         if (push) {                                     // if key is pressed
-            if (num == 10 | num == 11 | num == 12) {
-                num = 0;
+            if (num == 10 | num == 11 | num == 12) {    // if num pressed is * or 0 or #
+                num = 0;                                // num is 0
             }
-            p3 = num;
+            p3 = num;       // set press equal to num
             push = 0;
             flag = 0;
         }
@@ -158,7 +162,7 @@ void createP(void) {
 
     p1 *= 100;
     p2 *= 10;
-    sum = p1 + p2 + p3;
+    sum = p1 + p2 + p3;     // create a sum to be compared later
 
-    created = sum;
+    created = sum;        // set original password equal to sum
 }

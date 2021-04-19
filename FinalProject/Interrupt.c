@@ -76,16 +76,17 @@ void PORT6_IRQHandler(void) {
 }
 
 /*--------------------------------------------------------------
- * Function:
+ * Function:        PORT3_IRQHandler
  *
- * Description:
+ * Description:     This function deals with the GPIO interrupt
+ *                  that works with the touch sensor.
  *
  * Inputs:          none
  *
  * Outputs:         none
  *-------------------------------------------------------------*/
 void PORT3_IRQHandler(void) {
-    if (P3->IFG & BIT7) {       // if port 6 interrupts were changed and the flag was set
+    if (P3->IFG & BIT7) {       // if port 3 interrupts were changed and the flag was set
         TIMER_A3->CCR[0] = 600;
         TIMER_A3->CCR[1] = 300;
         SysTick_Delay(200);
@@ -118,10 +119,10 @@ void PORT3_IRQHandler(void) {
  * Outputs:         none
  *-------------------------------------------------------------*/
 void debounce(void) {
-    if (((P6->IN & BIT4) != BIT4) || ((P6->IN & BIT5) != BIT5)) {          // if any switch is pressed
+    if (((P6->IN & BIT4) != BIT4) || ((P6->IN & BIT5) != BIT5)) {          // if any button is pressed
         SysTick_Delay(10);                                                 // delay for 10 ms
 
-        if (((P6->IN & BIT4) != BIT4) || ((P6->IN & BIT5) != BIT5)) {      // check switch again
+        if (((P6->IN & BIT4) != BIT4) || ((P6->IN & BIT5) != BIT5)) {      // check button again
             buttonflag = 1;                                                // set button flag to 1
         }
     }

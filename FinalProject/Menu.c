@@ -195,7 +195,7 @@ void motorMenu(void) {
         delay_milli(10);            // delay 10 ms
     }
 
-    commandWrite(0xD0);             // send cursor to third line
+    commandWrite(0xD0);             // send cursor to fourth line
     delay_milli(10);                // delay 10 ms
 
     for (i = 0; i < 16; i++) {
@@ -244,7 +244,7 @@ void lightsMenu(void) {
         delay_milli(10);            // delay 10 ms
     }
 
-    commandWrite(0xD0);             // send cursor to third line
+    commandWrite(0xD0);             // send cursor to fourth line
     delay_milli(10);                // delay 10 ms
 
     for (i = 0; i < 16; i++) {
@@ -293,11 +293,11 @@ void redMenu(void) {
         delay_milli(10);            // delay 10 ms
     }
 
-    commandWrite(0xD0);             // send cursor to third line
+    commandWrite(0xD0);             // send cursor to fourth line
     delay_milli(10);                // delay 10 ms
 
     for (i = 0; i < 16; i++) {
-        dataWrite(fourth[i]);        // print out each letter
+        dataWrite(fourth[i]);       // print out each letter
         delay_milli(10);            // delay 10 ms
     }
 }
@@ -342,11 +342,11 @@ void blueMenu(void) {
         delay_milli(10);            // delay 10 ms
     }
 
-    commandWrite(0xD0);             // send cursor to third line
+    commandWrite(0xD0);             // send cursor to fourth line
     delay_milli(10);                // delay 10 ms
 
     for (i = 0; i < 16; i++) {
-        dataWrite(fourth[i]);        // print out each letter
+        dataWrite(fourth[i]);       // print out each letter
         delay_milli(10);            // delay 10 ms
     }
 }
@@ -354,7 +354,7 @@ void blueMenu(void) {
 /*--------------------------------------------------------------
  * Function:        greenMenu
  *
- * Description:     This function shows the blue LED menu.
+ * Description:     This function shows the green LED menu.
  *
  * Inputs:          none
  *
@@ -391,11 +391,11 @@ void greenMenu(void) {
         delay_milli(10);            // delay 10 ms
     }
 
-    commandWrite(0xD0);             // send cursor to third line
+    commandWrite(0xD0);             // send cursor to fourth line
     delay_milli(10);                // delay 10 ms
 
     for (i = 0; i < 16; i++) {
-        dataWrite(fourth[i]);        // print out each letter
+        dataWrite(fourth[i]);       // print out each letter
         delay_milli(10);            // delay 10 ms
     }
 }
@@ -441,11 +441,11 @@ void passcode(void) {
         delay_milli(10);            // delay 10 ms
     }
 
-    commandWrite(0xD0);             // send cursor to third line
+    commandWrite(0xD0);             // send cursor to fourth line
     delay_milli(10);                // delay 10 ms
 
     for (i = 0; i < 16; i++) {
-        dataWrite(fourth[i]);        // print out each letter
+        dataWrite(fourth[i]);       // print out each letter
         delay_milli(10);            // delay 10 ms
     }
 }
@@ -454,7 +454,8 @@ void passcode(void) {
  * Function:        passcode
  *
  * Description:     This function tells the user to enter a
- *                  3-digit passcode.
+ *                  3-digit passcode at the beginning to create
+ *                  one.
  *
  * Inputs:          none
  *
@@ -491,11 +492,11 @@ void firstPasscode(void) {
         delay_milli(10);            // delay 10 ms
     }
 
-    commandWrite(0xD0);             // send cursor to third line
+    commandWrite(0xD0);             // send cursor to fourth line
     delay_milli(10);                // delay 10 ms
 
     for (i = 0; i < 16; i++) {
-        dataWrite(fourth[i]);        // print out each letter
+        dataWrite(fourth[i]);       // print out each letter
         delay_milli(10);            // delay 10 ms
     }
 }

@@ -43,7 +43,7 @@ void red(void) {
             if (num == 10 | num == 11 | num == 12) {    // if num is * 0 #
                 num = 0;                                // num is 0
             }
-            p1 = num;           // push 1 is num
+            p1 = num;           // push becomes num
             push = 0;
             flag = 0;
         }
@@ -60,7 +60,7 @@ void red(void) {
             if (num == 10 | num == 11 | num == 12) {    // if num is * 0 #
                 num = 0;                                // num is 0
             }
-            p2 = num;           // push 2 is num
+            p2 = num;           // push becomes num
             push = 0;
             flag = 0;
         }
@@ -74,10 +74,10 @@ void red(void) {
         push = Read_Keypad();   // read keypad
 
         if (push) {                                     // if key is pressed
-            if (num == 10 | num == 11 | num == 12) {
-                num = 0;
+            if (num == 10 | num == 11 | num == 12) {    // if num is * 0 #
+                num = 0;                                // num is 0
             }
-            p3 = num;
+            p3 = num;           // push becomes num
             push = 0;
             flag = 0;
         }
@@ -85,13 +85,13 @@ void red(void) {
 
     p1 *= 100;
     p2 *= 10;
-    sum = p1 + p2 + p3;
+    sum = p1 + p2 + p3;     // create a sum for DC
 
-    if (sum >= 100) {
+    if (sum >= 100) {       // if sum > 100, make it 100
         sum = 100;
     }
 
-    redSum = sum;
+    redSum = sum;           // set global equal to sum
 
     if (redSum != 0) {      // if DC is not zero
         redOn = 1;          // tell user that red is ON
@@ -101,7 +101,7 @@ void red(void) {
         redOn = 0;          // tell user that red is OFF
     }
 
-    TIMER_A2->CCR[1] = 300 * sum;                         // set duty cycle
+    TIMER_A2->CCR[1] = 300 * sum;       // set duty cycle
 }
 
 /*--------------------------------------------------------------
@@ -133,10 +133,10 @@ void green(void) {
         push = Read_Keypad();
 
         if (push) {                                     // if key is pressed
-            if (num == 10 | num == 11 | num == 12) {
-                num = 0;
+            if (num == 10 | num == 11 | num == 12) {    // if num is * 0 #
+                num = 0;                                // num is 0
             }
-            p1 = num;
+            p1 = num;           // push becomes num
             push = 0;
             flag = 0;
         }
@@ -150,10 +150,10 @@ void green(void) {
         push = Read_Keypad();
 
         if (push) {                                     // if key is pressed
-            if (num == 10 | num == 11 | num == 12) {
-                num = 0;
+            if (num == 10 | num == 11 | num == 12) {    // if num is * 0 #
+                num = 0;                                // num is 0
             }
-            p2 = num;
+            p2 = num;           // push becomes num
             push = 0;
             flag = 0;
         }
@@ -167,10 +167,10 @@ void green(void) {
         push = Read_Keypad();
 
         if (push) {                                     // if key is pressed
-            if (num == 10 | num == 11 | num == 12) {
-                num = 0;
+            if (num == 10 | num == 11 | num == 12) {    // if num is * 0 #
+                num = 0;                                // num is 0
             }
-            p3 = num;
+            p3 = num;           // push becomes num
             push = 0;
             flag = 0;
         }
@@ -178,23 +178,23 @@ void green(void) {
 
     p1 *= 100;
     p2 *= 10;
-    sum = p1 + p2 + p3;
+    sum = p1 + p2 + p3;     // create a sum for DC
 
-    if (sum >= 100) {
+    if (sum >= 100) {       // if sum > 100, make it 100
         sum = 100;
     }
 
-    greenSum = sum;
+    greenSum = sum;           // set global equal to sum
 
     if (greenSum != 0) {      // if DC is not zero
-        greenOn = 1;          // tell user that red is ON
+        greenOn = 1;          // tell user that green is ON
     }
 
     if (greenSum == 0) {      // if DC is zero
-        greenOn = 0;          // tell user that red is OFF
+        greenOn = 0;          // tell user that green is OFF
     }
 
-    TIMER_A0->CCR[3] = 300 * sum;                         // set duty cycle
+    TIMER_A0->CCR[3] = 300 * sum;       // set duty cycle
 }
 
 /*--------------------------------------------------------------
@@ -226,10 +226,10 @@ void blue(void) {
         push = Read_Keypad();
 
         if (push) {                                     // if key is pressed
-            if (num == 10 | num == 11 | num == 12) {
-                num = 0;
+            if (num == 10 | num == 11 | num == 12) {    // if num is * 0 #
+                num = 0;                                // num is 0
             }
-            p1 = num;
+            p1 = num;           // push becomes num
             push = 0;
             flag = 0;
         }
@@ -243,10 +243,10 @@ void blue(void) {
         push = Read_Keypad();
 
         if (push) {                                     // if key is pressed
-            if (num == 10 | num == 11 | num == 12) {
-                num = 0;
+            if (num == 10 | num == 11 | num == 12) {    // if num is * 0 #
+                num = 0;                                // num is 0
             }
-            p2 = num;
+            p2 = num;           // push becomes num
             push = 0;
             flag = 0;
         }
@@ -260,10 +260,10 @@ void blue(void) {
         push = Read_Keypad();
 
         if (push) {                                     // if key is pressed
-            if (num == 10 | num == 11 | num == 12) {
-                num = 0;
+            if (num == 10 | num == 11 | num == 12) {    // if num is * 0 #
+                num = 0;                                // num is 0
             }
-            p3 = num;
+            p3 = num;           // push becomes num
             push = 0;
             flag = 0;
         }
@@ -271,21 +271,21 @@ void blue(void) {
 
     p1 *= 100;
     p2 *= 10;
-    sum = p1 + p2 + p3;
+    sum = p1 + p2 + p3;     // create a sum for DC
 
-    if (sum >= 100) {
+    if (sum >= 100) {       // if sum > 100, make it 100
         sum = 100;
     }
 
-    blueSum = sum;
+    blueSum = sum;           // set global equal to sum
 
     if (blueSum != 0) {      // if DC is not zero
-        blueOn = 1;          // tell user that red is ON
+        blueOn = 1;          // tell user that blue is ON
     }
 
     if (blueSum == 0) {      // if DC is zero
-        blueOn = 0;          // tell user that red is OFF
+        blueOn = 0;          // tell user that blue is OFF
     }
 
-    TIMER_A2->CCR[3] = 300 * sum;                         // set duty cycle
+    TIMER_A2->CCR[3] = 300 * sum;       // set duty cycle
 }
