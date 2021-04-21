@@ -150,7 +150,7 @@ void Back_init(void) {
 
     TIMER_A1->CCR[0] |= 1000;                          // set period amount
     TIMER_A1->CCTL[1] |= TIMER_A_CCTLN_OUTMOD_7;       // set to outmode 7
-    TIMER_A1->CCR[1] = 500;                            // set duty cycle
+    TIMER_A1->CCR[1] = 750;                            // set duty cycle
     TIMER_A1->CTL |= 0x0214;                           // set to SMCLK, up mode, clear TAR to start
 }
 
