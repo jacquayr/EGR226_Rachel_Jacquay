@@ -22,4 +22,3 @@ void passcode(void);
 void firstPasscode(void);
 
 #endif /* MENU_H_ */
-

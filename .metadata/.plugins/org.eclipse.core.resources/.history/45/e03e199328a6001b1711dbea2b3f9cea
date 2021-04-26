@@ -86,22 +86,22 @@ void PORT6_IRQHandler(void) {
  * Outputs:         none
  *-------------------------------------------------------------*/
 void PORT3_IRQHandler(void) {
-    if (P3->IFG & BIT7) {           // if port 3 interrupts were changed and the flag was set
-        TIMER_A3->CCR[0] = 600;     // reset period to 600
-        TIMER_A3->CCR[1] = 300;     // 50% DC
-        SysTick_Delay(200);         // delay 200ms
-        TIMER_A3->CCR[1] = 0;       // turn off
-        SysTick_Delay(100);         // delay 100ms
+    if (P3->IFG & BIT7) {       // if port 3 interrupts were changed and the flag was set
+        TIMER_A3->CCR[0] = 600;
+        TIMER_A3->CCR[1] = 300;
+        SysTick_Delay(200);
+        TIMER_A3->CCR[1] = 0;
+        SysTick_Delay(100);
 
-        TIMER_A3->CCR[0] = 800;     // reset period to 800
-        TIMER_A3->CCR[1] = 400;     // 50% DC
-        SysTick_Delay(400);         // delay 400ms
-        TIMER_A3->CCR[1] = 0;       // turn off
+        TIMER_A3->CCR[0] = 800;
+        TIMER_A3->CCR[1] = 400;
+        SysTick_Delay(400);
+        TIMER_A3->CCR[1] = 0;
 
-        TIMER_A3->CCR[0] = 1500;    // reset period to 1500
+        TIMER_A3->CCR[0] = 1500;
 
-        if (alarm == 1) {               // if alarm was on before touch sensor was pressed
-            TIMER_A3->CCR[1] = 750;     // turn alarm on
+        if (alarm == 1) {
+            TIMER_A3->CCR[1] = 750;
         }
     }
 

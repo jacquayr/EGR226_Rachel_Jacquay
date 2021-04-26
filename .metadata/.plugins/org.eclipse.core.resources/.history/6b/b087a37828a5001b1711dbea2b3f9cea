@@ -271,8 +271,8 @@ void changeState(void) {
         if (passFlag == 1) {    // password has already been created
             password();
 
-            if (userEnter == created) {     // if the user entered code is equal to created one
-                armUnarm();                 // call arm/unarm function to arm or unarm door
+            if (userEnter == created) {
+                armUnarm();
                 flag = 1;
 
                 while (flag) {
